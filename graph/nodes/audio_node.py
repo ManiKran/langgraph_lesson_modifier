@@ -1,6 +1,7 @@
 # graph/nodes/audio_node.py
 
 from tools.audio.generate import split_text_for_audio, generate_audio_for_text_chunks
+import os
 
 def audio_node(state: dict) -> dict:
     """
