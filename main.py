@@ -44,8 +44,8 @@ async def full_pipeline(request: FullPipelineRequest):
         })
 
         return {
-            "rules": result.rules,
-            "final_output_path": result.final_output_path
+            "rules": result["rules"],
+            "final_output_path": result["final_output_path"]
         }
     
     except Exception as e:
