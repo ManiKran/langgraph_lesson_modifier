@@ -22,5 +22,5 @@ def modify_lesson_node(state: dict) -> dict:
         raise RuntimeError(f"Failed to modify lesson: {str(e)}")
 
     # Store output in state
-    state["modified_lesson_text"] = modified_text
+    state.update({"modified_lesson_text" : modified_text})
     return state

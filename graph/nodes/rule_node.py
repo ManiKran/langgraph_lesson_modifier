@@ -12,6 +12,6 @@ def rule_node(state: dict) -> dict:
         raise ValueError("Missing 'student_profile' in state.")
     
     cleaned_rules = generate_cleaned_rules(profile)
-    state["rules"] = cleaned_rules
+    state.update({"rules" : cleaned_rules})
 
     return state

@@ -64,6 +64,8 @@ def visual_node(state: dict) -> dict:
         text += f"\n\n[IMAGE:{filename}]"
 
     # Update state
-    state["modified_lesson_text"] = text
-    state["image_paths"] = image_paths
+    state.update({
+    "modified_lesson_text": text,
+    "image_paths": image_paths
+    })
     return state

@@ -14,5 +14,5 @@ def final_output_node(state: dict) -> dict:
         raise ValueError("Missing modified_lesson_text in state.")
 
     final_path = generate_final_output(lesson_text, image_paths, audio_paths)
-    state["final_output_path"] = final_path
+    state.update({"final_output_path" : final_path})
     return state

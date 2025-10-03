@@ -1,7 +1,6 @@
 from pydantic import BaseModel, HttpUrl
 from typing import List, Dict, Union, Optional
 
-
 class State(BaseModel):
     student_profile: Optional[Dict[str, Union[str, List[str]]]] = None
     rules: Optional[List[str]] = None
@@ -14,3 +13,8 @@ class State(BaseModel):
 
     def get(self, key, default=None):
         return getattr(self, key, default)
+
+    def update(self, updates: Dict[str, Union[str, List[str], List[Dict], None]]):
+        for key, value in updates.items():
+            setattr(self, key, value)
+        return self

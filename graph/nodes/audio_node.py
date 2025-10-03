@@ -12,7 +12,7 @@ def audio_node(state: dict) -> dict:
 
     if not any("audio" in r.lower() for r in rules):
         print("[AudioNode] No audio-related rule. Skipping.")
-        state["audio_paths"] = []
+        state.update({"audio_paths" : []})
         return state
 
     chunks = split_text_for_audio(lesson_text)
@@ -24,6 +24,5 @@ def audio_node(state: dict) -> dict:
         lesson_text = lesson_text.replace(text, f"{text}\n\n[AUDIO:{filename}]")
 
     # Update state
-    state["modified_lesson_text"] = lesson_text
-    state["audio_paths"] = [path for path, _ in audio_results]
+    state.update({"modified_lesson_text" : lesson_text, "audio_paths" : [path for path, _ in audio_results]})
     return state
