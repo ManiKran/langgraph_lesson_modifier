@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from typing import Dict, List, Union
+import os
 
 from graph.lesson_graph import lesson_app
 from graph.short_lesson_graph import short_lesson_app
@@ -43,9 +44,11 @@ async def full_pipeline(request: FullPipelineRequest):
             "lesson_url": str(request.lesson_url)
         })
 
+        filename = os.path.basename(result["final_output_path"])
+
         return {
             "rules": result["rules"],
-            "final_output_path": result["final_output_path"]
+            "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{filename}"
         }
     
     except Exception as e:
@@ -64,3 +67,13 @@ async def modify_lesson_with_rules(request: ModifyLessonRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lesson modification failed: {str(e)}")
+    
+
+from fastapi.staticfiles import StaticFiles
+
+# Mount static route to serve files in data/outputs/final
+app.mount(
+    "/files",
+    StaticFiles(directory="data/outputs/final"),
+    name="files"
+)
