@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+langchain
+langgraph
+openai
+python-dotenv
+pydantic
+python-multipart
+httpx
+docx
+PyPDF2
+reportlab
+unsplash-python
+elevenlabs
+aiofiles
