@@ -13,3 +13,6 @@ reportlab
 unsplash-python
 elevenlabs
 aiofiles
+python-pptx
+docx2txt
+PyMuPDF
