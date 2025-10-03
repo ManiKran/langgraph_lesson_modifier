@@ -10,7 +10,6 @@ httpx
 docx
 PyPDF2
 reportlab
-unsplash-python
 elevenlabs
 aiofiles
 python-pptx
