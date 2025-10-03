@@ -50,3 +50,7 @@ async def modify_lesson_with_rules(
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lesson modification failed: {str(e)}")
+    
+@app.get("/")
+def root():
+    return {"message": "Lesson Modifier API is running 🚀"}
