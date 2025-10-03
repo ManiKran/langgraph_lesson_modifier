@@ -65,6 +65,15 @@ Optimized Rule List:
 
     raw_output = response.choices[0].message.content.strip()
 
+    if raw_output.startswith("```"):
+        # remove ``` at start and end
+        raw_output = raw_output.strip("`")
+        # split off lines
+        lines = raw_output.splitlines()
+        # remove language tag like 'python'
+        lines = [line for line in lines if not line.strip().startswith("python")]
+        raw_output = "\n".join(lines).strip()
+
     try:
         cleaned_rules = eval(raw_output)
         if not isinstance(cleaned_rules, list):
