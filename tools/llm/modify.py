@@ -21,7 +21,8 @@ Below are the adaptation rules to be applied:
 Now, based on these rules, modify the following lesson content.
 
 Instructions:
-- Reword or simplify complex text where needed.
+- modify the content based on the rules provided.
+- Apply all the rules that are mentioned.
 - Add [Insert Image: short description] where a visual would help understanding.
 - Add [Insert Audio: sentence to narrate] where an audio explanation or read-aloud would benefit the learner.
 - Do NOT include actual image or audio content. Only use these placeholders.
