@@ -42,7 +42,12 @@ async def full_pipeline(request: FullPipelineRequest):
             "student_profile": request.student_profile,
             "lesson_url": str(request.lesson_url)
         })
-        return result
+
+        return {
+            "rules": result.rules,
+            "final_output_path": result.final_output_path
+        }
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
 
