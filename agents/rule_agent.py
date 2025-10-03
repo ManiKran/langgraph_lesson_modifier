@@ -1,6 +1,6 @@
 import json
 from typing import List, Dict, Union
-import os
+import os, ast
 from openai import OpenAI
 
 # Path to the knowledge base
@@ -75,7 +75,7 @@ Optimized Rule List:
         raw_output = "\n".join(lines).strip()
 
     try:
-        cleaned_rules = eval(raw_output)
+        cleaned_rules = ast.literal_eval(raw_output)
         if not isinstance(cleaned_rules, list):
             raise ValueError("LLM did not return a list.")
         return cleaned_rules

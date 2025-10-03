@@ -8,8 +8,8 @@ class State(BaseModel):
     lesson_path: Optional[str] = None
     lesson_content: Optional[str] = None
     modified_lesson_text: Optional[str] = None
-    audios: Optional[List[str]] = None
-    images: Optional[List[str]] = None
+    audio_paths: Optional[List[str]] = None
+    image_paths: Optional[List[str]] = None
 
     def get(self, key, default=None):
         return getattr(self, key, default)

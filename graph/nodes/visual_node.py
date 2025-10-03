@@ -2,7 +2,7 @@
 
 from tools.visuals.fetch import get_image_urls_from_unsplash, download_images
 from openai import OpenAI
-import os
+import os, ast
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -36,7 +36,7 @@ Visual Suggestions:
 
     raw = response.choices[0].message.content.strip()
     try:
-        queries = eval(raw)
+        queries = ast.literal_eval(raw)
         return queries if isinstance(queries, list) else []
     except:
         return []

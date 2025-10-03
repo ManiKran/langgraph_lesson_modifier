@@ -11,8 +11,12 @@ def download_lesson_node(state: dict) -> dict:
     if not lesson_url:
         raise ValueError("Missing lesson_url in state.")
 
-    file_path = download_file(lesson_url)
+    # ✅ Cast to string to avoid decode error
+    file_path = download_file(str(lesson_url))
     lesson_content = extract_text_from_file(file_path)
 
-    state.update({"lesson_file_path" : file_path, "lesson_content" : lesson_content})
+    state.update({
+        "lesson_file_path": file_path,
+        "lesson_content": lesson_content
+    })
     return state
