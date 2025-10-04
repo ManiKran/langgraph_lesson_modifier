@@ -34,11 +34,24 @@ Visual Suggestions:
     )
 
     raw = response.choices[0].message.content.strip()
-    print("raw:", raw)
+    print("raw:", raw)  # debugging
+
+    # --- Clean raw output ---
+    if raw.startswith("```"):
+        raw = raw.strip("`")                # remove backticks
+        lines = raw.splitlines()
+        lines = [line for line in lines if not line.strip().startswith("python")]
+        raw = "\n".join(lines).strip()
+
+    # remove "visual_suggestions =" if present
+    if "visual_suggestions" in raw:
+        raw = raw.split("=", 1)[-1].strip()
+
     try:
         queries = ast.literal_eval(raw)
         return queries if isinstance(queries, list) else []
-    except:
+    except Exception as e:
+        print("[VisualNode] Failed to eval raw:", raw, "Error:", e)
         return []
 
 def visual_node(state: dict) -> dict:
