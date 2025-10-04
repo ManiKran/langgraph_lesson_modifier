@@ -79,3 +79,17 @@ app.mount(
     StaticFiles(directory="data/outputs/final"),
     name="files"
 )
+
+# NEW: mount audio files
+app.mount(
+    "/audio",
+    StaticFiles(directory="data/outputs/audio"),
+    name="audio"
+)
+
+# NEW: mount image files
+app.mount(
+    "/images",
+    StaticFiles(directory="data/outputs/images"),
+    name="images"
+)
