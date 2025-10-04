@@ -34,13 +34,11 @@ Visual Suggestions:
     )
 
     raw = response.choices[0].message.content.strip()
+    print("raw:", raw)
     try:
-        print("i am here 1")
         queries = ast.literal_eval(raw)
-        print("queries:", queries)
         return queries if isinstance(queries, list) else []
     except:
-        print("here i am 2")
         return []
 
 def visual_node(state: dict) -> dict:
