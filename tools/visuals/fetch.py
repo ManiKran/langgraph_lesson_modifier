@@ -23,10 +23,9 @@ def get_image_urls_from_unsplash(query: str, count: int = 1) -> List[str]:
     
     try:
         response = requests.get(url, headers=headers)
-        print(f"[Unsplash] Request URL: {url}")
-        print(f"[Unsplash] Status: {response.status_code}")
-        print(f"[Unsplash] Response JSON: {response.text[:500]}")  # limit output
-        print("unsplash could not generate")
+        if response.status_code != 200:
+            print(f"[Unsplash] Failed to fetch images: {response.status_code} - {response.text}")
+            return []
 
         data = response.json()
 
@@ -48,14 +47,28 @@ def download_images(image_urls: List[str]) -> List[str]:
     Downloads image URLs to local disk and returns file paths.
     """
     local_paths = []
+    headers = {'User-Agent': 'Mozilla/5.0'}
+
     for url in image_urls:
         try:
-            img_data = requests.get(url).content
+            print(f"[Download] Attempting download: {url}")
+            response = requests.get(url, headers=headers)
+
+            if response.status_code != 200:
+                print(f"[Download] Failed with status {response.status_code}: {url}")
+                continue
+
             filename = f"image_{uuid.uuid4().hex}.jpg"
             path = os.path.join(IMAGE_OUTPUT_DIR, filename)
+
             with open(path, "wb") as f:
-                f.write(img_data)
+                f.write(response.content)
+
+            print(f"[Download] Image saved to: {path}")
             local_paths.append(path)
+
         except Exception as e:
-            print(f"[VisualAgent] Failed to download image: {e}")
+            print(f"[Download] Exception downloading image from {url}: {e}")
+
+    print(f"[Download] Total images downloaded: {len(local_paths)}")
     return local_paths
