@@ -15,8 +15,10 @@ def modify_lesson_content(text: str, rules: List[str]) -> str:
     prompt = f"""
 You are an inclusive education assistant helping to adapt lesson plans for students with special learning needs.
 
-Below are the adaptation rules to be applied:
-{rules}
+Below are the adaptation rules to be applied. Use them to guide your modifications, but do NOT repeat or list these rules in the output.
+
+Adaptation Rules:
+{chr(10).join(f"- {rule}" for rule in rules)}
 
 Now, based on these rules, modify the following lesson content.
 
