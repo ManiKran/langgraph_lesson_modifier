@@ -55,10 +55,6 @@ Visual Suggestions:
         return []
 
 def visual_node(state: dict) -> dict:
-    """
-    Replaces [Insert Image: ...] placeholders with actual [IMAGE:filename] references.
-    Downloads corresponding images and appends any extras at the end.
-    """
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
 
@@ -75,21 +71,24 @@ def visual_node(state: dict) -> dict:
 
     print(image_urls)
     image_paths = download_images(image_urls)
+    print(image_paths)
 
-    # 3. Replace placeholders [Insert Image: ...] one by one with [IMAGE:filename]
-    def replacement(match, filenames=image_paths):
+    # 3. Replace placeholders using a COPY of image_paths
+    image_paths_copy = image_paths.copy()
+
+    def replacement(match, filenames=image_paths_copy):
         if filenames:
             path = filenames.pop(0)
             filename = os.path.basename(path)
             return f"[IMAGE:{filename}]"
         else:
-            return match.group(0)  # leave original if no image left
+            return match.group(0)
 
     pattern = r"\[Insert Image:.*?\]"
     text = re.sub(pattern, replacement, text)
 
-    # 4. If extra images left after replacement, append at end
-    for path in image_paths:
+    # 4. Append extras if leftover in copy (not original)
+    for path in image_paths_copy:
         filename = os.path.basename(path)
         if filename not in text:
             text += f"\n\n[IMAGE:{filename}]"
@@ -97,6 +96,6 @@ def visual_node(state: dict) -> dict:
     # 5. Update state
     state.update({
         "modified_lesson_text": text,
-        "image_paths": image_paths
+        "image_paths": image_paths  # full list preserved
     })
     return state
