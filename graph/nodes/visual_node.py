@@ -1,5 +1,4 @@
 # graph/nodes/visual_node.py
-
 from tools.visuals.fetch import get_image_urls_from_unsplash, download_images
 from openai import OpenAI
 import os, ast, re
@@ -27,7 +26,6 @@ Extract a list of 3–5 visual elements that should be added to this lesson. Ret
 
 Visual Suggestions:
 """
-
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
@@ -41,11 +39,10 @@ Visual Suggestions:
     except:
         return []
 
-
 def visual_node(state: dict) -> dict:
     """
-    Adds visual aids to the lesson content based on rules and lesson structure.
-    Replaces existing [Insert Image: ...] tags with downloaded images.
+    Replaces [Insert Image: ...] placeholders with actual [IMAGE:filename] references.
+    Downloads corresponding images and appends any extras at the end.
     """
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
@@ -53,29 +50,35 @@ def visual_node(state: dict) -> dict:
     if not text or not rules:
         return state
 
-    # Step 1: Extract image queries using GPT
+    # 1. Extract image queries from lesson
     queries = extract_image_queries(text, rules)
+
+    # 2. Download images for each query
     image_urls = []
     for query in queries:
         image_urls.extend(get_image_urls_from_unsplash(query, count=1))
 
     image_paths = download_images(image_urls)
 
-    # Step 2: Replace existing [Insert Image: ...] with [IMAGE:filename]
-    def replace_placeholder(match, filenames=image_paths):
+    # 3. Replace placeholders [Insert Image: ...] one by one with [IMAGE:filename]
+    def replacement(match, filenames=image_paths):
         if filenames:
             path = filenames.pop(0)
-            return f"[IMAGE:{os.path.basename(path)}]"
+            filename = os.path.basename(path)
+            return f"[IMAGE:{filename}]"
         else:
-            return match.group(0)  # fallback: leave original
+            return match.group(0)  # leave original if no image left
 
     pattern = r"\[Insert Image:.*?\]"
-    text = re.sub(pattern, replace_placeholder, text)
+    text = re.sub(pattern, replacement, text)
 
-    # Step 3: If extra images left, append at end
+    # 4. If extra images left after replacement, append at end
     for path in image_paths:
-        text += f"\n\n[IMAGE:{os.path.basename(path)}]"
+        filename = os.path.basename(path)
+        if filename not in text:
+            text += f"\n\n[IMAGE:{filename}]"
 
+    # 5. Update state
     state.update({
         "modified_lesson_text": text,
         "image_paths": image_paths
