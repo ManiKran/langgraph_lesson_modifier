@@ -48,6 +48,7 @@ async def full_pipeline(request: FullPipelineRequest):
 
         return {
             "image_paths": result["image_paths"],
+            "audio_paths": result["audio_paths"],
             #"rules": result["rules"],
             "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{filename}"
         }
