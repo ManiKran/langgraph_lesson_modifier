@@ -2,7 +2,7 @@
 
 from tools.visuals.fetch import get_image_urls_from_unsplash, download_images
 from openai import OpenAI
-import os, ast
+import os, ast, re
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -41,9 +41,11 @@ Visual Suggestions:
     except:
         return []
 
+
 def visual_node(state: dict) -> dict:
     """
     Adds visual aids to the lesson content based on rules and lesson structure.
+    Replaces existing [Insert Image: ...] tags with downloaded images.
     """
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
@@ -51,6 +53,7 @@ def visual_node(state: dict) -> dict:
     if not text or not rules:
         return state
 
+    # Step 1: Extract image queries using GPT
     queries = extract_image_queries(text, rules)
     image_urls = []
     for query in queries:
@@ -58,14 +61,23 @@ def visual_node(state: dict) -> dict:
 
     image_paths = download_images(image_urls)
 
-    # Insert [IMAGE:filename.jpg] placeholders into the lesson
-    for path in image_paths:
-        filename = os.path.basename(path)
-        text += f"\n\n[IMAGE:{filename}]"
+    # Step 2: Replace existing [Insert Image: ...] with [IMAGE:filename]
+    def replace_placeholder(match, filenames=image_paths):
+        if filenames:
+            path = filenames.pop(0)
+            return f"[IMAGE:{os.path.basename(path)}]"
+        else:
+            return match.group(0)  # fallback: leave original
 
-    # Update state
+    pattern = r"\[Insert Image:.*?\]"
+    text = re.sub(pattern, replace_placeholder, text)
+
+    # Step 3: If extra images left, append at end
+    for path in image_paths:
+        text += f"\n\n[IMAGE:{os.path.basename(path)}]"
+
     state.update({
-    "modified_lesson_text": text,
-    "image_paths": image_paths
+        "modified_lesson_text": text,
+        "image_paths": image_paths
     })
     return state
