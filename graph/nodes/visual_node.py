@@ -40,6 +40,7 @@ Visual Suggestions:
         print("queries:", queries)
         return queries if isinstance(queries, list) else []
     except:
+        print("here i am 2")
         return []
 
 def visual_node(state: dict) -> dict:
