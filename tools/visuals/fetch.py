@@ -20,15 +20,25 @@ def get_image_urls_from_unsplash(query: str, count: int = 1) -> List[str]:
     """
     headers = {"Accept-Version": "v1"}
     url = f"https://api.unsplash.com/photos/random?query={query}&count={count}&client_id={UNSPLASH_ACCESS_KEY}"
-    response = requests.get(url, headers=headers)
-
+    
     try:
+        response = requests.get(url, headers=headers)
+        print(f"[Unsplash] Request URL: {url}")
+        print(f"[Unsplash] Status: {response.status_code}")
+        print(f"[Unsplash] Response JSON: {response.text[:500]}")  # limit output
+
         data = response.json()
+
         if isinstance(data, list):
-            return [item["urls"]["regular"] for item in data]
+            urls = [item["urls"]["regular"] for item in data]
+            print(f"[Unsplash] Fetched {len(urls)} image URLs for '{query}'")
+            return urls
         else:
+            print(f"[Unsplash] Unexpected data type: {type(data)}")
             return []
-    except:
+
+    except Exception as e:
+        print(f"[Unsplash] Error fetching image URLs for '{query}': {str(e)}")
         return []
 
 def download_images(image_urls: List[str]) -> List[str]:
