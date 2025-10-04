@@ -30,7 +30,8 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
             continue  # Skip empty parts
 
         try:
-            audio_path = os.path.join(OUTPUT_DIR, f"audio_{uuid.uuid4().hex}.mp3")
+            filename = f"audio_{uuid.uuid4().hex}.mp3"
+            audio_path = os.path.join(OUTPUT_DIR, filename)
 
             response = client.audio.speech.create(
                 model="tts-1",
@@ -39,7 +40,8 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
             )
             response.stream_to_file(audio_path)
 
-            audio_results.append((audio_path, chunk.strip()))
+            audio_results.append((f"https://langgraph-lesson-modifier.onrender.com/audio/{filename}", chunk.strip()))
+            #audio_results.append((audio_path, chunk.strip()))
         except Exception as e:
             print(f"[AudioAgent] Failed to generate audio for chunk {idx}: {e}")
             continue

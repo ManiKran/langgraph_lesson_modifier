@@ -65,7 +65,8 @@ def download_images(image_urls: List[str]) -> List[str]:
                 f.write(response.content)
 
             print(f"[Download] Image saved to: {path}")
-            local_paths.append(path)
+            local_paths.append(f"https://langgraph-lesson-modifier.onrender.com/images/{filename}")  # Store relative path
+            #local_paths.append(path)
 
         except Exception as e:
             print(f"[Download] Exception downloading image from {url}: {e}")
