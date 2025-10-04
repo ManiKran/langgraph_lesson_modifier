@@ -11,6 +11,7 @@ def extract_image_queries(text: str, rules: list) -> list:
     Use LLM to suggest what image topics should be added to the lesson.
     """
     if not any("visual" in rule.lower() for rule in rules):
+        print("no Visuals rule found")
         return []
 
     prompt = f"""
@@ -52,7 +53,6 @@ def visual_node(state: dict) -> dict:
 
     # 1. Extract image queries from lesson
     queries = extract_image_queries(text, rules)
-    print("quesries:", queries)
 
     # 2. Download images for each query
     image_urls = []
