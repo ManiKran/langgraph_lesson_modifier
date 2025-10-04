@@ -35,7 +35,9 @@ Visual Suggestions:
 
     raw = response.choices[0].message.content.strip()
     try:
+        print("i am here 1")
         queries = ast.literal_eval(raw)
+        print("queries:", queries)
         return queries if isinstance(queries, list) else []
     except:
         return []
