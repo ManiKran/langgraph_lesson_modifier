@@ -52,6 +52,7 @@ def visual_node(state: dict) -> dict:
 
     # 1. Extract image queries from lesson
     queries = extract_image_queries(text, rules)
+    print("quesries:", queries)
 
     # 2. Download images for each query
     image_urls = []
