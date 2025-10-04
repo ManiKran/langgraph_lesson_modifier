@@ -26,6 +26,7 @@ def get_image_urls_from_unsplash(query: str, count: int = 1) -> List[str]:
         print(f"[Unsplash] Request URL: {url}")
         print(f"[Unsplash] Status: {response.status_code}")
         print(f"[Unsplash] Response JSON: {response.text[:500]}")  # limit output
+        print("unsplash could not generate")
 
         data = response.json()
 
@@ -38,6 +39,7 @@ def get_image_urls_from_unsplash(query: str, count: int = 1) -> List[str]:
             return []
 
     except Exception as e:
+        print("i am here 2")
         print(f"[Unsplash] Error fetching image URLs for '{query}': {str(e)}")
         return []
 
