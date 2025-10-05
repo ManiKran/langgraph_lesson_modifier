@@ -9,18 +9,20 @@ import os
 from graph.lesson_graph import lesson_app
 from graph.short_lesson_graph import short_lesson_app
 
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI(title="Lesson Modification LangGraph API")
 
 # Enable CORS (Bubble or frontend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Replace with your Bubble frontend domain in production
+    allow_origins=["*"],  # Change this to your Bubble domain in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Request models for API endpoints
+# ---------- Request Models ----------
 class FullPipelineRequest(BaseModel):
     student_profile: Dict[str, Union[str, List[str]]]
     lesson_url: HttpUrl
@@ -29,10 +31,12 @@ class ModifyLessonRequest(BaseModel):
     rules: List[str]
     lesson_url: HttpUrl
 
+# ---------- Root Route ----------
 @app.get("/")
 def root():
     return {"message": "Lesson Modifier API is running 🚀"}
 
+# ---------- Full Pipeline ----------
 @app.post("/full-pipeline")
 async def full_pipeline(request: FullPipelineRequest):
     """
@@ -44,18 +48,21 @@ async def full_pipeline(request: FullPipelineRequest):
             "lesson_url": str(request.lesson_url)
         })
 
-        filename = os.path.basename(result["final_output_path"])
+        txt_filename = os.path.basename(result["final_output_path"])
+        json_filename = os.path.basename(result.get("final_output_json", ""))
 
         return {
             "image_paths": result["image_paths"],
             "audio_paths": result["audio_paths"],
             #"rules": result["rules"],
-            "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{filename}"
+            "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_filename}",
+            "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_filename}" if json_filename else None
         }
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
 
+# ---------- Modify Lesson (Rules Only) ----------
 @app.post("/modify-lesson")
 async def modify_lesson_with_rules(request: ModifyLessonRequest):
     """
@@ -69,27 +76,33 @@ async def modify_lesson_with_rules(request: ModifyLessonRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lesson modification failed: {str(e)}")
-    
 
-from fastapi.staticfiles import StaticFiles
+# ---------- Static File Mounts ----------
 
-# Mount static route to serve files in data/outputs/final
+# Final text files
 app.mount(
     "/files",
     StaticFiles(directory="data/outputs/final"),
     name="files"
 )
 
-# NEW: mount audio files
+# Audio files
 app.mount(
     "/audio",
     StaticFiles(directory="data/outputs/audio"),
     name="audio"
 )
 
-# NEW: mount image files
+# Image files
 app.mount(
     "/images",
     StaticFiles(directory="data/outputs/images"),
     name="images"
+)
+
+# JSON outputs
+app.mount(
+    "/json",
+    StaticFiles(directory="data/outputs/json"),
+    name="json"
 )

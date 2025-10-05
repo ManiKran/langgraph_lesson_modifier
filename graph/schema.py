@@ -1,7 +1,13 @@
+# schema.py
+
 from pydantic import BaseModel, HttpUrl
 from typing import List, Dict, Union, Optional
 
 class State(BaseModel):
+    """
+    Central state object passed between pipeline nodes.
+    Tracks lesson, rules, multimedia paths, and generated outputs.
+    """
     student_profile: Optional[Dict[str, Union[str, List[str]]]] = None
     rules: Optional[List[str]] = None
     lesson_url: Optional[HttpUrl] = None
@@ -10,12 +16,21 @@ class State(BaseModel):
     modified_lesson_text: Optional[str] = None
     audio_paths: Optional[List[str]] = None
     image_paths: Optional[List[str]] = None
-    final_output_path: Optional[str] = None
+
+    # new: final outputs
+    final_output_path: Optional[str] = None   # path to final .txt file
+    final_output_json: Optional[str] = None   # path to final .json file for structured display
 
     def get(self, key, default=None):
+        """
+        Mimic dict-like get() for pipeline nodes.
+        """
         return getattr(self, key, default)
 
     def update(self, updates: Dict[str, Union[str, List[str], List[Dict], None]]):
+        """
+        Mimic dict-like update() for pipeline nodes.
+        """
         for key, value in updates.items():
             setattr(self, key, value)
         return self
