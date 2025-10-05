@@ -69,9 +69,7 @@ def visual_node(state: dict) -> dict:
     for query in queries:
         image_urls.extend(get_image_urls_from_unsplash(query, count=1))
 
-    print(image_urls)
     image_paths = download_images(image_urls)
-    print(image_paths)
 
     # 3. Replace placeholders using a COPY of image_paths
     image_paths_copy = image_paths.copy()
