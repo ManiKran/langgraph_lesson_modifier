@@ -100,9 +100,8 @@ app.mount(
     name="images"
 )
 
-# JSON outputs
-app.mount(
-    "/json",
-    StaticFiles(directory="data/outputs/json"),
-    name="json"
-)
+# Ensure output directories exist
+os.makedirs("data/outputs/json", exist_ok=True)
+
+# Static mounts
+app.mount("/json", StaticFiles(directory="data/outputs/json"), name="json")
