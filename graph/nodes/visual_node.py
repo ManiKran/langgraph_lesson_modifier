@@ -1,4 +1,5 @@
 # graph/nodes/visual_node.py
+
 from tools.visuals.fetch import get_image_urls_from_unsplash, download_images
 from openai import OpenAI
 import os, ast, re
@@ -6,9 +7,11 @@ import os, ast, re
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
+
 def extract_image_queries(text: str, rules: list) -> list:
     """
     Use LLM to suggest what image topics should be added to the lesson.
+    Returns a list of strings (visual queries).
     """
     if not any("visual" in rule.lower() for rule in rules):
         print("no Visuals rule found")
@@ -23,8 +26,8 @@ Lesson:
 Rules:
 {rules}
 
-Extract a list of 3–5 visual elements that should be added to this lesson. Return them as a Python list of strings.
-
+Extract a list of 3–5 visual elements that should be added to this lesson.
+Return them as a Python list of strings only. Do not include any variable assignment.
 Visual Suggestions:
 """
     response = client.chat.completions.create(
@@ -38,23 +41,44 @@ Visual Suggestions:
 
     # --- Clean raw output ---
     if raw.startswith("```"):
-        raw = raw.strip("`")                # remove backticks
+        raw = raw.strip("`")  # remove all backticks
         lines = raw.splitlines()
+        # remove language hint lines like "python"
         lines = [line for line in lines if not line.strip().startswith("python")]
         raw = "\n".join(lines).strip()
 
-    # remove "visual_suggestions =" if present
-    if "visual_suggestions" in raw:
-        raw = raw.split("=", 1)[-1].strip()
+    # remove assignment if present (like visual_elements = or visual_suggestions =)
+    if "=" in raw:
+        try:
+            raw = raw.split("=", 1)[1].strip()
+        except:
+            pass
 
+    # now safe to eval
     try:
         queries = ast.literal_eval(raw)
-        return queries if isinstance(queries, list) else []
+        if isinstance(queries, list):
+            return queries
     except Exception as e:
         print("[VisualNode] Failed to eval raw:", raw, "Error:", e)
-        return []
+
+    # fallback: if GPT returned bullet points
+    if "-" in raw:
+        fallback = [
+            line.strip("-• ").strip()
+            for line in raw.splitlines()
+            if line.strip().startswith(("-", "•"))
+        ]
+        if fallback:
+            return fallback
+
+    return []
+
 
 def visual_node(state: dict) -> dict:
+    """
+    Downloads images based on visual queries and replaces placeholders in the modified lesson text.
+    """
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
 
@@ -82,7 +106,7 @@ def visual_node(state: dict) -> dict:
         else:
             return match.group(0)
 
-    pattern = r"\[Insert Image:.*?\]"
+    pattern = r"$begin:math:display$Insert Image:.*?$end:math:display$"
     text = re.sub(pattern, replacement, text)
 
     # 4. Append extras if leftover in copy (not original)
