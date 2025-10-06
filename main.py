@@ -15,18 +15,21 @@ app = FastAPI(title="Lesson Modification LangGraph API")
 
 
 # test block:
+import os
 import openai
 
 app = FastAPI()
 
 @app.on_event("startup")
-async def verify_openai_key():
+async def check_openai_key():
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    print("✅ Using OpenAI Key (partial):", openai.api_key[:5] + "..." + openai.api_key[-4:])
     try:
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        openai.Model.list()  # Safe test request
-        print("✅ OpenAI key verified")
+        # Optional: test if key is valid
+        openai.Model.list()
+        print("✅ OpenAI API key is valid")
     except Exception as e:
-        print("❌ OpenAI key failed at startup:", str(e))
+        print("❌ OpenAI API key error:", str(e))
 
 # test block ends
 
