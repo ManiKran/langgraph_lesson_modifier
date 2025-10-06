@@ -66,7 +66,8 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
             filename = audio_match.group(1).strip()
             if filename.endswith(".mp3"):  # Avoid quote-based junk
                 audio_url = f"{BASE_AUDIO_URL}{filename}"
-                md_lines.append(f"🔊 [Click to listen]({audio_url})")
+                #md_lines.append(f"🔊 [Click to listen]({audio_url})")
+                md_lines.append(f'<audio controls>\n  <source src="{audio_url}" type="audio/mpeg">\n  Your browser does not support the audio element.\n</audio>')
             continue
 
         # Convert [Insert Image: ...]
