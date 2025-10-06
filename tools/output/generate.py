@@ -3,15 +3,13 @@ import uuid
 import json
 import re
 
-# Output folders
 FINAL_TXT_DIR = "data/outputs/final"
 FINAL_JSON_DIR = "data/outputs/json"
-FINAL_MD_DIR = "data/outputs/markdown"  # <-- NEW
+FINAL_MD_DIR = "data/outputs/markdown"  # NEW directory for .md files
 
-# Ensure folders exist
 os.makedirs(FINAL_TXT_DIR, exist_ok=True)
 os.makedirs(FINAL_JSON_DIR, exist_ok=True)
-os.makedirs(FINAL_MD_DIR, exist_ok=True)  # <-- NEW
+os.makedirs(FINAL_MD_DIR, exist_ok=True)
 
 BASE_AUDIO_URL = "https://langgraph-lesson-modifier.onrender.com/audio/"
 BASE_IMAGE_URL = "https://langgraph-lesson-modifier.onrender.com/images/"
@@ -24,9 +22,9 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
 
     txt_path = os.path.join(FINAL_TXT_DIR, txt_filename)
     json_path = os.path.join(FINAL_JSON_DIR, json_filename)
-    md_path = os.path.join(FINAL_MD_DIR, md_filename)  # <-- NEW location
+    md_path = os.path.join(FINAL_MD_DIR, md_filename)
 
-    # --- Enrich text for .txt file ---
+    # === TXT Output ===
     enriched_text = lesson_text
     for path in image_paths:
         fname = os.path.basename(path)
@@ -38,41 +36,63 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
     with open(txt_path, "w") as f:
         f.write(enriched_text)
 
-    # --- Markdown file ---
+    # === Markdown Output ===
     md_lines = []
     lines = enriched_text.splitlines()
+
     for line in lines:
-        line = line.strip()
-        if not line:
+        stripped = line.strip()
+        if not stripped:
             md_lines.append("")
             continue
 
-        audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", line)
-        if audio_match:
-            audio_url = f"{BASE_AUDIO_URL}{audio_match.group(1).strip()}"
-            md_lines.append(f"🔊 [Click to listen]({audio_url})")
+        # Markdown Formatting: Detect and apply heading levels
+        if stripped.lower().startswith("title:"):
+            md_lines.append(f"# {stripped.replace('Title:', '').strip()}")
+            continue
+        elif "instructions" in stripped.lower():
+            md_lines.append(f"## {stripped}")
+            continue
+        elif re.match(r"^\d+\.", stripped):
+            md_lines.append(f"### {stripped}")
+            continue
+        elif stripped.endswith(":"):
+            md_lines.append(f"**{stripped}**")
             continue
 
-        image_match = re.search(r"\[Insert Image:\s*(.+?)\]", line)
+        # Convert [Insert Audio: ...] to playable markdown link if valid
+        audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", stripped)
+        if audio_match:
+            filename = audio_match.group(1).strip()
+            if filename.endswith(".mp3"):  # Avoid quote-based junk
+                audio_url = f"{BASE_AUDIO_URL}{filename}"
+                md_lines.append(f"🔊 [Click to listen]({audio_url})")
+            continue
+
+        # Convert [Insert Image: ...]
+        image_match = re.search(r"\[Insert Image:\s*(.+?)\]", stripped)
         if image_match:
             image_url = f"{BASE_IMAGE_URL}{image_match.group(1).strip()}"
             md_lines.append(f"![Visual]({image_url})")
             continue
 
-        md_lines.append(line)
+        # Plain paragraph
+        md_lines.append(stripped)
 
     with open(md_path, "w") as md:
         md.write("\n\n".join(md_lines))
 
-    # --- JSON blocks ---
+    # === JSON Output ===
     blocks = []
     for line in lines:
         audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", line)
         if audio_match:
-            blocks.append({
-                "type": "audio",
-                "src": f"{BASE_AUDIO_URL}{audio_match.group(1).strip()}"
-            })
+            fname = audio_match.group(1).strip()
+            if fname.endswith(".mp3"):
+                blocks.append({
+                    "type": "audio",
+                    "src": f"{BASE_AUDIO_URL}{fname}"
+                })
             continue
 
         image_match = re.search(r"\[Insert Image:\s*(.+?)\]", line)
