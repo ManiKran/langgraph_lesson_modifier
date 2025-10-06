@@ -6,33 +6,31 @@ import re
 # Output folders
 FINAL_TXT_DIR = "data/outputs/final"
 FINAL_JSON_DIR = "data/outputs/json"
+FINAL_MD_DIR = "data/outputs/markdown"  # <-- NEW
 
 # Ensure folders exist
 os.makedirs(FINAL_TXT_DIR, exist_ok=True)
 os.makedirs(FINAL_JSON_DIR, exist_ok=True)
+os.makedirs(FINAL_MD_DIR, exist_ok=True)  # <-- NEW
 
 BASE_AUDIO_URL = "https://langgraph-lesson-modifier.onrender.com/audio/"
 BASE_IMAGE_URL = "https://langgraph-lesson-modifier.onrender.com/images/"
 
 def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list) -> dict:
-    """
-    Generates:
-    1) A .txt file with enriched text
-    2) A .json file with structured blocks (text/image/audio)
-    """
     file_id = uuid.uuid4().hex
     txt_filename = f"final_lesson_{file_id}.txt"
     json_filename = f"final_lesson_{file_id}.json"
+    md_filename = f"final_lesson_{file_id}.md"
 
     txt_path = os.path.join(FINAL_TXT_DIR, txt_filename)
     json_path = os.path.join(FINAL_JSON_DIR, json_filename)
+    md_path = os.path.join(FINAL_MD_DIR, md_filename)  # <-- NEW location
 
     # --- Enrich text for .txt file ---
     enriched_text = lesson_text
     for path in image_paths:
         fname = os.path.basename(path)
         enriched_text = enriched_text.replace(f"[IMAGE:{fname}]", f"\n🔍 [Insert Image: {fname}]\n")
-
     for path in audio_paths:
         fname = os.path.basename(path)
         enriched_text = enriched_text.replace(f"[AUDIO:{fname}]", f"\n🔊 [Insert Audio: {fname}]\n")
@@ -40,9 +38,34 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
     with open(txt_path, "w") as f:
         f.write(enriched_text)
 
-    # --- Build JSON blocks ---
-    blocks = []
+    # --- Markdown file ---
+    md_lines = []
     lines = enriched_text.splitlines()
+    for line in lines:
+        line = line.strip()
+        if not line:
+            md_lines.append("")
+            continue
+
+        audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", line)
+        if audio_match:
+            audio_url = f"{BASE_AUDIO_URL}{audio_match.group(1).strip()}"
+            md_lines.append(f"🔊 [Click to listen]({audio_url})")
+            continue
+
+        image_match = re.search(r"\[Insert Image:\s*(.+?)\]", line)
+        if image_match:
+            image_url = f"{BASE_IMAGE_URL}{image_match.group(1).strip()}"
+            md_lines.append(f"![Visual]({image_url})")
+            continue
+
+        md_lines.append(line)
+
+    with open(md_path, "w") as md:
+        md.write("\n\n".join(md_lines))
+
+    # --- JSON blocks ---
+    blocks = []
     for line in lines:
         audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", line)
         if audio_match:
@@ -67,12 +90,11 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
                 "content": text_content
             })
 
-    # Save JSON file
     with open(json_path, "w") as jf:
         json.dump(blocks, jf, ensure_ascii=False, indent=2)
 
-    # Return both paths
     return {
         "txt_path": txt_path,
-        "json_path": json_path
+        "json_path": json_path,
+        "md_path": md_path
     }

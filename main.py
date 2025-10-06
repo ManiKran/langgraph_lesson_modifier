@@ -50,14 +50,16 @@ async def full_pipeline(request: FullPipelineRequest):
 
         txt_filename = os.path.basename(result["final_output_path"])
         json_filename = os.path.basename(result.get("final_output_json", ""))
+        md_filename = os.path.basename(result.get("final_output_md", ""))
 
         return {
             "image_paths": result["image_paths"],
             "audio_paths": result["audio_paths"],
-            #"rules": result["rules"],
+            # "rules": result["rules"],
             "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_filename}",
-            "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_filename}" if json_filename else None
-        }
+            "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_filename}" if json_filename else None,
+            "final_output_md": f"https://langgraph-lesson-modifier.onrender.com/markdown/{md_filename}" if md_filename else None
+            }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
@@ -102,3 +104,10 @@ app.mount(
 
 # Static mounts
 app.mount("/json", StaticFiles(directory="data/outputs/json"), name="json")
+
+# Markdown files
+app.mount(
+    "/markdown",
+    StaticFiles(directory="data/outputs/markdown"),
+    name="markdown"
+)

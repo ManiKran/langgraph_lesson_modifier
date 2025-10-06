@@ -71,7 +71,15 @@ def visual_node(state: dict) -> dict:
     # 2. Download images for each query
     image_urls = []
     for query in queries:
-        image_urls.extend(get_image_urls_from_unsplash(query, count=1))
+        urls = get_image_urls_from_unsplash(query, count=1)
+        if not urls:
+            print(f"[VisualNode] No images found for query: {query}")
+            continue
+        image_urls.extend(urls)
+
+    if not image_urls:
+        print("[VisualNode] No valid image URLs to download.")
+        return state
 
     image_paths = download_images(image_urls)
 
