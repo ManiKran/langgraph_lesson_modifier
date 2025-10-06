@@ -34,7 +34,7 @@ Visual Suggestions:
     )
 
     raw = response.choices[0].message.content.strip()
-    print("raw:", raw)  # debugging
+    #print("raw:", raw)  # debugging
 
     # --- Clean raw output ---
     if raw.startswith("```"):

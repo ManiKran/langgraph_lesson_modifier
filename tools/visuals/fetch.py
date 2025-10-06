@@ -31,7 +31,7 @@ def get_image_urls_from_unsplash(query: str, count: int = 1) -> List[str]:
 
         if isinstance(data, list):
             urls = [item["urls"]["regular"] for item in data]
-            print(f"[Unsplash] Fetched {len(urls)} image URLs for '{query}'")
+            #print(f"[Unsplash] Fetched {len(urls)} image URLs for '{query}'")
             return urls
         else:
             print(f"[Unsplash] Unexpected data type: {type(data)}")
@@ -51,7 +51,7 @@ def download_images(image_urls: List[str]) -> List[str]:
 
     for url in image_urls:
         try:
-            print(f"[Download] Attempting download: {url}")
+            #print(f"[Download] Attempting download: {url}")
             response = requests.get(url, headers=headers)
 
             if response.status_code != 200:
@@ -64,7 +64,7 @@ def download_images(image_urls: List[str]) -> List[str]:
             with open(path, "wb") as f:
                 f.write(response.content)
 
-            print(f"[Download] Image saved to: {path}")
+            #print(f"[Download] Image saved to: {path}")
             local_paths.append(f"https://langgraph-lesson-modifier.onrender.com/images/{filename}")  # Store relative path
             #local_paths.append(path)
 
