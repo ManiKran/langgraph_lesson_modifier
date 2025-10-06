@@ -13,6 +13,23 @@ from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="Lesson Modification LangGraph API")
 
+
+# test block:
+import openai
+
+app = FastAPI()
+
+@app.on_event("startup")
+async def verify_openai_key():
+    try:
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        openai.Model.list()  # Safe test request
+        print("✅ OpenAI key verified")
+    except Exception as e:
+        print("❌ OpenAI key failed at startup:", str(e))
+
+# test block ends
+
 # Enable CORS (Bubble or frontend)
 app.add_middleware(
     CORSMiddleware,
