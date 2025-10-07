@@ -9,7 +9,7 @@ IMAGE_OUTPUT_DIR = "data/outputs/images"
 os.makedirs(IMAGE_OUTPUT_DIR, exist_ok=True)
 
 # Environment variable
-SERPAPI_KEY = os.getenv("SERPAPI_KEY")
+SERPAPI_KEY = os.getenv("SERPAPI_API_KEY")
 BASE_IMAGE_URL = "https://langgraph-lesson-modifier.onrender.com/images/"
 
 def get_image_urls_from_serpapi(query: str, count: int = 1) -> List[str]:
