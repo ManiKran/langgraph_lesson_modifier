@@ -4,6 +4,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from typing import Dict, List, Union
+from fastapi.responses import JSONResponse
+from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 import os
 
 from graph.lesson_graph import lesson_app
@@ -81,15 +83,16 @@ async def modify_lesson_with_rules(request: ModifyLessonRequest):
     
 # ---------- Seaarch Images in Preview ----------
 from fastapi import Query
-from fastapi.responses import JSONResponse
-from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 
 @app.get("/api/search_images")
-async def search_images(q: str = Query(..., alias="q")):
+async def search_images(q: str = Query(..., description="Search query")):
     """
-    Search for images using SerpAPI and return public URLs (downloads them).
+    Search for images using SerpAPI and return public URLs.
     """
     try:
+        if not q:
+            return JSONResponse(status_code=400, content={"error": "Missing query parameter 'q'"})
+        
         urls = get_image_urls_from_serpapi(query=q, count=5)
         public_urls = download_images(urls)
         return JSONResponse({"images": public_urls})
