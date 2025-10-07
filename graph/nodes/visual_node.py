@@ -1,5 +1,5 @@
 # graph/nodes/visual_node.py
-from tools.visuals.fetch import get_image_urls_from_unsplash, download_images
+from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 from openai import OpenAI
 import os, ast, re
 
@@ -71,7 +71,7 @@ def visual_node(state: dict) -> dict:
     # 2. Download images for each query
     image_urls = []
     for query in queries:
-        urls = get_image_urls_from_unsplash(query, count=1)
+        urls = get_image_urls_from_serpapi(query, count=1)
         if not urls:
             print(f"[VisualNode] No images found for query: {query}")
             continue

@@ -16,3 +16,4 @@ python-pptx
 docx2txt
 PyMuPDF
 uvicorn
+google-search-results

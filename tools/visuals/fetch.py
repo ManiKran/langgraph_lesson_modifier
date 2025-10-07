@@ -3,59 +3,56 @@
 import os
 import uuid
 import requests
-from typing import List, Tuple
-from openai import OpenAI
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=OPENAI_API_KEY)
+from serpapi import GoogleSearch
+from typing import List
 
 IMAGE_OUTPUT_DIR = "data/outputs/images"
 os.makedirs(IMAGE_OUTPUT_DIR, exist_ok=True)
 
-UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
+SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
-def get_image_urls_from_unsplash(query: str, count: int = 1) -> List[str]:
+BASE_IMAGE_URL = "https://langgraph-lesson-modifier.onrender.com/images/"
+
+def get_image_urls_from_serpapi(query: str, count: int = 1) -> List[str]:
     """
-    Fetch image URLs from Unsplash based on a query.
+    Fetch image URLs from Google Images using SerpAPI.
     """
-    headers = {"Accept-Version": "v1"}
-    url = f"https://api.unsplash.com/photos/random?query={query}&count={count}&client_id={UNSPLASH_ACCESS_KEY}"
-    
     try:
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            print(f"[Unsplash] Failed to fetch images: {response.status_code} - {response.text}")
-            return []
+        params = {
+            "q": query,
+            "tbm": "isch",
+            "api_key": SERPAPI_KEY,
+            "num": count
+        }
 
-        data = response.json()
+        search = GoogleSearch(params)
+        results = search.get_dict()
 
-        if isinstance(data, list):
-            urls = [item["urls"]["regular"] for item in data]
-            print(f"[Unsplash] Fetched {len(urls)} image URLs for '{query}'")
+        if "images_results" in results:
+            urls = [img["original"] for img in results["images_results"][:count]]
+            print(f"[SerpAPI] Fetched {len(urls)} image URLs for '{query}'")
             return urls
         else:
-            print(f"[Unsplash] Unexpected data type: {type(data)}")
+            print("[SerpAPI] No image results found.")
             return []
-
     except Exception as e:
-        print("i am here 2")
-        print(f"[Unsplash] Error fetching image URLs for '{query}': {str(e)}")
+        print(f"[SerpAPI] Error fetching images: {e}")
         return []
 
 def download_images(image_urls: List[str]) -> List[str]:
     """
-    Downloads image URLs to local disk and returns file paths.
+    Downloads image URLs to local disk and returns public URLs.
     """
     local_paths = []
     headers = {'User-Agent': 'Mozilla/5.0'}
 
     for url in image_urls:
         try:
-            print(f"[Download] Attempting download: {url}")
+            print(f"[Download] Attempting: {url}")
             response = requests.get(url, headers=headers)
 
             if response.status_code != 200:
-                print(f"[Download] Failed with status {response.status_code}: {url}")
+                print(f"[Download] Failed: {response.status_code}")
                 continue
 
             filename = f"image_{uuid.uuid4().hex}.jpg"
@@ -64,12 +61,10 @@ def download_images(image_urls: List[str]) -> List[str]:
             with open(path, "wb") as f:
                 f.write(response.content)
 
-            print(f"[Download] Image saved to: {path}")
-            local_paths.append(f"https://langgraph-lesson-modifier.onrender.com/images/{filename}")  # Store relative path
-            #local_paths.append(path)
+            print(f"[Download] Saved: {path}")
+            local_paths.append(f"{BASE_IMAGE_URL}{filename}")
 
         except Exception as e:
-            print(f"[Download] Exception downloading image from {url}: {e}")
+            print(f"[Download] Error: {e}")
 
-    print(f"[Download] Total images downloaded: {len(local_paths)}")
     return local_paths
