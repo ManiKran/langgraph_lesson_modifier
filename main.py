@@ -95,7 +95,7 @@ async def search_images(q: str = Query(..., description="Search query")):
         
         urls = get_image_urls_from_serpapi(query=q, count=5)
         public_urls = download_images(urls)
-        return JSONResponse({"images": public_urls})
+        return public_urls
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 
