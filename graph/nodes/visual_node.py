@@ -1,4 +1,3 @@
-# graph/nodes/visual_node.py
 from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 from openai import OpenAI
 import os, ast, re
@@ -23,7 +22,7 @@ Lesson:
 Rules:
 {rules}
 
-Extract a list of 3–5 visual elements that should be added to this lesson. Return them as a Python list of strings.
+Extract 3–5 short and searchable visual topics that would help illustrate this lesson. Return them as a Python list of strings.
 
 Visual Suggestions:
 """
@@ -43,20 +42,28 @@ Visual Suggestions:
         lines = [line for line in lines if not line.strip().startswith("python")]
         raw = "\n".join(lines).strip()
 
-    # remove assignment if present (like visual_elements = or visual_suggestions =)
     if "=" in raw:
         try:
             raw = raw.split("=", 1)[1].strip()
         except:
             pass
 
-    # now safe to eval
     try:
         queries = ast.literal_eval(raw)
         return queries if isinstance(queries, list) else []
     except Exception as e:
         print("[VisualNode] Failed to eval raw:", raw, "Error:", e)
         return []
+
+def clean_query(query: str) -> str:
+    """
+    Simplify and normalize search phrases for SerpAPI.
+    """
+    query = query.lower()
+    query = re.sub(r"(for|with|to|and|on|in|of|the|a|an)", "", query)  # remove filler words
+    query = re.sub(r"[^a-zA-Z0-9\s]", "", query)  # remove punctuation
+    query = re.sub(r"\s+", " ", query)  # collapse spaces
+    return query.strip()
 
 def visual_node(state: dict) -> dict:
     text = state.get("modified_lesson_text", "")
@@ -68,12 +75,13 @@ def visual_node(state: dict) -> dict:
     # 1. Extract image queries from lesson
     queries = extract_image_queries(text, rules)
 
-    # 2. Download images for each query
+    # 2. Clean and download images for each query
     image_urls = []
     for query in queries:
-        urls = get_image_urls_from_serpapi(query, count=1)
+        cleaned_query = clean_query(query)
+        urls = get_image_urls_from_serpapi(cleaned_query, count=1)
         if not urls:
-            print(f"[VisualNode] No images found for query: {query}")
+            print(f"[VisualNode] No images found for query: {cleaned_query}")
             continue
         image_urls.extend(urls)
 
@@ -106,6 +114,6 @@ def visual_node(state: dict) -> dict:
     # 5. Update state
     state.update({
         "modified_lesson_text": text,
-        "image_paths": image_paths  # full list preserved
+        "image_paths": image_paths
     })
     return state
