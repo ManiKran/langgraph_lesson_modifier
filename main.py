@@ -78,6 +78,23 @@ async def modify_lesson_with_rules(request: ModifyLessonRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lesson modification failed: {str(e)}")
+    
+# ---------- Seaarch Images in Preview ----------
+from fastapi import Query
+from fastapi.responses import JSONResponse
+from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
+
+@app.get("/api/search_images")
+async def search_images(q: str = Query(..., alias="q")):
+    """
+    Search for images using SerpAPI and return public URLs (downloads them).
+    """
+    try:
+        urls = get_image_urls_from_serpapi(query=q, count=5)
+        public_urls = download_images(urls)
+        return JSONResponse({"images": public_urls})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ---------- Static File Mounts ----------
 
