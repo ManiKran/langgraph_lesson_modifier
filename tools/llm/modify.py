@@ -47,7 +47,7 @@ Modified Lesson:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.4,
-            timeout=30
+            timeout=60
         )
 
         print("[ModifyLesson] LLM response received.")  
