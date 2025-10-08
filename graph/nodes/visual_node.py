@@ -57,22 +57,12 @@ Visual Suggestions:
         print("[VisualNode] Failed to eval raw:", raw, "Error:", e)
         return []
 
-#def clean_query(query: str) -> str:
-    """
-    Simplify and normalize search phrases for SerpAPI.
-    """
-    print(f"[VisualNode] Cleaning query: {query}")
-    query = query.lower()
-    query = re.sub(r"(for|with|to|and|on|in|of|the|a|an)", "", query)  # remove filler words
-    query = re.sub(r"[^a-zA-Z0-9\s]", "", query)  # remove punctuation
-    query = re.sub(r"\s+", " ", query)  # collapse spaces
-    return query.strip()
-
 def visual_node(state: dict) -> dict:
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
 
     if not text or not rules:
+        state.update({"image_paths": []})  # ensure key exists
         return state
 
     # 1. Extract image queries from lesson
@@ -81,7 +71,6 @@ def visual_node(state: dict) -> dict:
     # 2. Clean and download images for each query
     image_urls = []
     for query in queries:
-        #cleaned_query = clean_query(query)
         urls = get_image_urls_from_serpapi(query, count=1)
         if not urls:
             print(f"[VisualNode] No images found for query: {query}")
@@ -90,6 +79,7 @@ def visual_node(state: dict) -> dict:
 
     if not image_urls:
         print("[VisualNode] No valid image URLs to download.")
+        state.update({"image_paths": []})  # ✅ fix
         return state
 
     image_paths = download_images(image_urls)
