@@ -9,6 +9,7 @@ def extract_image_queries(text: str, rules: list) -> list:
     """
     Use LLM to suggest what image topics should be added to the lesson.
     """
+    print("[VisualNode] Extracting image queries...")  
     if not any("visual" in rule.lower() for rule in rules):
         print("no Visuals rule found")
         return []
@@ -60,6 +61,7 @@ def clean_query(query: str) -> str:
     """
     Simplify and normalize search phrases for SerpAPI.
     """
+    print(f"[VisualNode] Cleaning query: {query}")
     query = query.lower()
     query = re.sub(r"(for|with|to|and|on|in|of|the|a|an)", "", query)  # remove filler words
     query = re.sub(r"[^a-zA-Z0-9\s]", "", query)  # remove punctuation
@@ -67,6 +69,7 @@ def clean_query(query: str) -> str:
     return query.strip()
 
 def visual_node(state: dict) -> dict:
+    print("[VisualNode] Starting visual enhancement...")
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
 

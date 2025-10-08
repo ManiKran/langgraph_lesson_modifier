@@ -9,6 +9,7 @@ def audio_node(state: dict) -> dict:
     Generates up to 5 audio narration files based on the modified lesson and rules.
     Adds audio paths and inline [AUDIO:<filename>] markers to the lesson text.
     """
+    print("[AudioNode] Starting audio generation...")
     start_time = time.time()
 
     rules = state.get("rules", [])
