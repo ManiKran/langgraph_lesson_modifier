@@ -40,6 +40,7 @@ def root():
 
 # ---------- Full Pipeline ----------
 @app.post("/full-pipeline")
+@app.post("/full-pipeline/")
 async def full_pipeline(request: FullPipelineRequest):
     """
     Full pipeline: Generate rules from student profile → Download lesson → Modify → Add audio/visuals → Output.
