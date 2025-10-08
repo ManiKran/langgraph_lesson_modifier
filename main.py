@@ -38,6 +38,51 @@ class ModifyLessonRequest(BaseModel):
 def root():
     return {"message": "Lesson Modifier API is running 🚀"}
 
+import uuid
+
+processing_jobs = {}
+
+# ------- Start of trying to show results for long API calls -------
+
+@app.post("/start-full-pipeline")
+async def start_full_pipeline(request: FullPipelineRequest):
+    job_id = str(uuid.uuid4())
+    processing_jobs[job_id] = {"status": "processing", "result": None}
+
+    # Kick off background processing
+    import threading
+    def process_job():
+        try:
+            result = lesson_app.invoke({
+                "student_profile": request.student_profile,
+                "lesson_url": str(request.lesson_url)
+            })
+
+            processing_jobs[job_id]["status"] = "done"
+            processing_jobs[job_id]["result"] = {
+                "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{os.path.basename(result['final_output_path'])}",
+                "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{os.path.basename(result['final_output_json'])}",
+                "final_output_md": f"https://langgraph-lesson-modifier.onrender.com/markdown/{os.path.basename(result['final_output_md'])}",
+                "image_paths": result["image_paths"],
+                "audio_paths": result["audio_paths"],
+            }
+        except Exception as e:
+            processing_jobs[job_id]["status"] = "error"
+            processing_jobs[job_id]["result"] = {"error": str(e)}
+
+    threading.Thread(target=process_job).start()
+
+    return {"job_id": job_id}
+
+@app.get("/get-job-status/{job_id}")
+async def get_job_status(job_id: str):
+    if job_id not in processing_jobs:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    return processing_jobs[job_id]
+
+# ------- End of trying to show results for long API calls -------
+
 # ---------- Full Pipeline ----------
 from fastapi.responses import JSONResponse
 
