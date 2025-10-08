@@ -9,12 +9,9 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 def generate_cleaned_rules(student_profile: Dict[str, Union[str, List[str]]]) -> List[str]:
-    print("[RuleAgent] Extracting rules from knowledge base...")
     rules_to_apply = extract_rules_from_knowledge_base(student_profile)
-    print(f"[RuleAgent] Found {len(rules_to_apply)} rules")
 
     cleaned_rules = filter_rules_with_llm(rules_to_apply)
-    print(f"[RuleAgent] Final cleaned rules: {cleaned_rules}")
     return cleaned_rules
 
 def extract_rules_from_knowledge_base(student_profile: Dict[str, Union[str, List[str]]]) -> List[str]:
@@ -59,8 +56,6 @@ Your task:
 Optimized Rule List:
 """
 
-    start = time.time()
-
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
@@ -70,9 +65,6 @@ Optimized Rule List:
         )
     except Exception as e:
         raise ValueError(f"[RuleAgent] LLM call failed: {e}")
-
-    duration = time.time() - start
-    print(f"[RuleAgent] LLM responded in {duration:.2f}s")
 
     raw_output = response.choices[0].message.content.strip()
 
@@ -86,7 +78,6 @@ Optimized Rule List:
         cleaned_rules = ast.literal_eval(raw_output)
         if not isinstance(cleaned_rules, list):
             raise ValueError("LLM did not return a list.")
-        print(f"[RuleAgent] Cleaned rules: {cleaned_rules}")
         return cleaned_rules
     except Exception as e:
         raise ValueError(f"Failed to parse LLM response: {raw_output} — {str(e)}")

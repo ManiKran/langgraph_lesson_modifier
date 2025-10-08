@@ -69,7 +69,6 @@ Visual Suggestions:
     return query.strip()
 
 def visual_node(state: dict) -> dict:
-    print("[VisualNode] Starting visual enhancement...")
     text = state.get("modified_lesson_text", "")
     rules = state.get("rules", [])
 
@@ -116,7 +115,6 @@ def visual_node(state: dict) -> dict:
             text += f"\n\n[IMAGE:{filename}]"
 
     # 5. Update state
-    print(f"[VisualNode] Image paths: {image_paths}")
     state.update({
         "modified_lesson_text": text,
         "image_paths": image_paths

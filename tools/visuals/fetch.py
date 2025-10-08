@@ -68,7 +68,6 @@ def download_images(image_urls: List[str]) -> List[str]:
 
             public_url = f"{BASE_IMAGE_URL}{filename}"
             downloaded_urls.append(public_url)
-            print(f"[Download] Saved and available at: {public_url}")
 
         except Exception as e:
             print(f"[Download] Error downloading image from {url}: {e}")

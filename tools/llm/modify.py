@@ -12,7 +12,6 @@ def modify_lesson_content(text: str, rules: List[str]) -> str:
     Uses GPT-4o to apply lesson adaptation rules to the input lesson content.
     Returns modified lesson content with placeholders for visuals and audio.
     """
-    print("[ModifyLesson] Modifying lesson content with LLM...")
     prompt = f"""
 You are an inclusive education assistant helping to adapt lesson plans for students with special learning needs.
 
@@ -49,10 +48,7 @@ Modified Lesson:
             temperature=0.4,
             timeout=60
         )
-
-        print("[ModifyLesson] LLM response received.")  
         return response.choices[0].message.content.strip()
 
     except Exception as e:
-        print(f"[ModifyLesson] LLM call failed: {e}")
         raise RuntimeError(f"Failed to modify lesson with LLM: {str(e)}")

@@ -7,7 +7,6 @@ def modify_lesson_node(state: dict) -> dict:
     Applies adaptation rules to the lesson content using GPT-4o.
     Adds structured placeholders for visuals and audio.
     """
-    print("[ModifyLessonNode] Modifying lesson content...")
     rules = state.get("rules")
     lesson_content = state.get("lesson_content")
 
