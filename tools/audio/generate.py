@@ -49,7 +49,7 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
             audio_path = os.path.join(OUTPUT_DIR, filename)
 
             response = client.audio.speech.create(
-                model="gpt-4o-tts-mini",
+                model="gpt-4o-mini-tts",
                 voice="nova",  # or "shimmer", "onyx", etc.
                 input=chunk
             )
