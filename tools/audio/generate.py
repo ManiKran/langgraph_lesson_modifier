@@ -58,6 +58,7 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
             audio_url = f"https://langgraph-lesson-modifier.onrender.com/audio/{filename}"
             audio_results.append((audio_url, chunk.strip()))
 
+            print(f"[AudioAgent] Generated audio for chunk {idx}: {audio_url}")
         except Exception as e:
             print(f"[AudioAgent] Failed to generate audio for chunk {idx}: {e}")
             continue

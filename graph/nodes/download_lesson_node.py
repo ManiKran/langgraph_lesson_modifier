@@ -16,6 +16,9 @@ def download_lesson_node(state: dict) -> dict:
     file_path = download_file(str(lesson_url))
     lesson_content = extract_text_from_file(file_path)
 
+    print(file_path)
+    print(lesson_content[:500])  # Print first 500 characters for verification
+
     state.update({
         "lesson_file_path": file_path,
         "lesson_content": lesson_content

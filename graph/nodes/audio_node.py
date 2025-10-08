@@ -38,6 +38,7 @@ def audio_node(state: dict) -> dict:
         filename = os.path.basename(path)
         lesson_text = lesson_text.replace(text, f"{text}\n\n[AUDIO:{filename}]")
 
+    print(f"[AudioNode] Audio results: {audio_results}")
     # Update state
     state.update({
         "modified_lesson_text": lesson_text,
