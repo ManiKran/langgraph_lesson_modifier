@@ -52,7 +52,7 @@ Here is a list of adaptation rules extracted based on a student's profile:
 
 Your task:
 - Remove duplicate or nearly identical rules.
-- If there is a direct conflict (e.g. 'include visuals' and 'don't include visuals'), keep the more restrictive/explicit one (e.g. 'don't include visuals').
+- If there is a direct conflict (e.g. 'include visuals' and 'don't include visuals'), remove all the conflicting rules.
 - Ensure the final list contains only meaningful, non-conflicting rules.
 - Return only a valid Python list of strings.
 
@@ -66,7 +66,7 @@ Optimized Rule List:
             model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
-            timeout=60  # Add timeout to avoid infinite hang
+            timeout=30  # Add timeout to avoid infinite hang
         )
     except Exception as e:
         raise ValueError(f"[RuleAgent] LLM call failed: {e}")

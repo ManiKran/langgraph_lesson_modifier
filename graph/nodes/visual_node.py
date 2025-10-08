@@ -57,7 +57,7 @@ Visual Suggestions:
         print("[VisualNode] Failed to eval raw:", raw, "Error:", e)
         return []
 
-def clean_query(query: str) -> str:
+#def clean_query(query: str) -> str:
     """
     Simplify and normalize search phrases for SerpAPI.
     """
@@ -82,10 +82,10 @@ def visual_node(state: dict) -> dict:
     # 2. Clean and download images for each query
     image_urls = []
     for query in queries:
-        cleaned_query = clean_query(query)
-        urls = get_image_urls_from_serpapi(cleaned_query, count=1)
+        #cleaned_query = clean_query(query)
+        urls = get_image_urls_from_serpapi(query, count=1)
         if not urls:
-            print(f"[VisualNode] No images found for query: {cleaned_query}")
+            print(f"[VisualNode] No images found for query: {query}")
             continue
         image_urls.extend(urls)
 
