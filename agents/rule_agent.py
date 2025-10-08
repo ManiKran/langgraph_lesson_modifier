@@ -38,8 +38,6 @@ def extract_rules_from_knowledge_base(student_profile: Dict[str, Union[str, List
 import time
 
 def filter_rules_with_llm(rules: List[str]) -> List[str]:
-    print("[RuleAgent] Starting LLM filtering of rules...")
-    print(f"[RuleAgent] Input rules ({len(rules)}): {rules}")
 
     prompt = f"""
 You are a rule optimization assistant for lesson planning.

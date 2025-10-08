@@ -26,8 +26,8 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
     md_path = os.path.join(FINAL_MD_DIR, md_filename)
 
     # Valid file names from actual downloads
-    valid_images = [os.path.basename(p) for p in image_paths]
-    valid_audios = [os.path.basename(p) for p in audio_paths]
+    valid_images = [os.path.basename(p) for p in image_paths or []]
+    valid_audios = [os.path.basename(p) for p in audio_paths or []]
 
     # === TXT Output ===
     enriched_text = lesson_text
