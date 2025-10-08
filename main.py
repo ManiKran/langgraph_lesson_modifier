@@ -39,6 +39,8 @@ def root():
     return {"message": "Lesson Modifier API is running 🚀"}
 
 # ---------- Full Pipeline ----------
+from fastapi.responses import JSONResponse
+
 @app.post("/full-pipeline")
 @app.post("/full-pipeline/")
 async def full_pipeline(request: FullPipelineRequest):
@@ -55,14 +57,15 @@ async def full_pipeline(request: FullPipelineRequest):
         json_filename = os.path.basename(result.get("final_output_json", ""))
         md_filename = os.path.basename(result.get("final_output_md", ""))
 
-        return {
+        response_data = {
             "image_paths": result["image_paths"],
             "audio_paths": result["audio_paths"],
-            # "rules": result["rules"],
             "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_filename}",
             "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_filename}" if json_filename else None,
             "final_output_md": f"https://langgraph-lesson-modifier.onrender.com/markdown/{md_filename}" if md_filename else None
-            }
+        }
+
+        return JSONResponse(content=response_data)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
