@@ -46,6 +46,7 @@ Modified Lesson:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.4,
+            timeout=30
         )
 
         return response.choices[0].message.content.strip()

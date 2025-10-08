@@ -2,26 +2,41 @@
 
 import os
 import uuid
-from openai import OpenAI
 from typing import List, Tuple
+from openai import OpenAI
 
+# Initialize OpenAI client
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
+# Ensure output directory exists
 OUTPUT_DIR = "data/outputs/audio"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-def split_text_for_audio(text: str) -> List[str]:
+def split_text_for_audio(text: str, num_chunks: int = 5) -> List[str]:
     """
-    Basic heuristic to split text into chunks for TTS narration.
-    You can later improve this with NLP or LLM.
+    Splits the input text into `num_chunks` roughly equal-length chunks.
     """
-    return text.split("\n\n")  # Split by paragraph
+    if not text:
+        return []
+
+    words = text.split()
+    total_words = len(words)
+    chunk_size = max(1, total_words // num_chunks)
+
+    chunks = []
+    for i in range(0, total_words, chunk_size):
+        chunk = " ".join(words[i:i + chunk_size])
+        chunks.append(chunk)
+        if len(chunks) == num_chunks:
+            break
+
+    return chunks
 
 def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
     """
     Converts each text chunk into an audio file.
-    Returns list of (audio_path, audio_caption).
+    Returns list of (audio_url, audio_text).
     """
     audio_results = []
 
@@ -40,8 +55,9 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
             )
             response.stream_to_file(audio_path)
 
-            audio_results.append((f"https://langgraph-lesson-modifier.onrender.com/audio/{filename}", chunk.strip()))
-            #audio_results.append((audio_path, chunk.strip()))
+            audio_url = f"https://langgraph-lesson-modifier.onrender.com/audio/{filename}"
+            audio_results.append((audio_url, chunk.strip()))
+
         except Exception as e:
             print(f"[AudioAgent] Failed to generate audio for chunk {idx}: {e}")
             continue

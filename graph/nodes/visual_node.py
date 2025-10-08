@@ -30,6 +30,7 @@ Visual Suggestions:
         model="gpt-4o",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.5,
+        timeout=30
     )
 
     raw = response.choices[0].message.content.strip()

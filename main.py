@@ -53,10 +53,13 @@ async def start_full_pipeline(request: FullPipelineRequest):
     import threading
     def process_job():
         try:
+            print("[Job] Starting lesson_app.invoke...")
             result = lesson_app.invoke({
                 "student_profile": request.student_profile,
                 "lesson_url": str(request.lesson_url)
             })
+
+            print("[Job] Completed lesson_app.invoke.")
 
             processing_jobs[job_id]["status"] = "done"
             processing_jobs[job_id]["result"] = {
