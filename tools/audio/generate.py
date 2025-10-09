@@ -47,3 +47,24 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
             continue
 
     return audio_results
+
+
+def generate_audio_file(text: str) -> str:
+    """
+    Generate audio for a single sentence or prompt.
+    Returns the file path to the generated MP3.
+    """
+    if not text.strip():
+        raise ValueError("Empty text provided for TTS.")
+
+    filename = f"audio_{uuid.uuid4().hex}.mp3"
+    audio_path = os.path.join(OUTPUT_DIR, filename)
+
+    response = client.audio.speech.create(
+        model="gpt-4o-mini-tts",  # or "tts-1-hd" for better quality
+        voice="nova",  # Or coral, shimmer, onyx, etc.
+        input=text
+    )
+    response.stream_to_file(audio_path)
+
+    return audio_path

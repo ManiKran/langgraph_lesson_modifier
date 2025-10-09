@@ -12,10 +12,7 @@ os.makedirs(FINAL_TXT_DIR, exist_ok=True)
 os.makedirs(FINAL_JSON_DIR, exist_ok=True)
 os.makedirs(FINAL_MD_DIR, exist_ok=True)
 
-BASE_AUDIO_URL = "https://langgraph-lesson-modifier.onrender.com/audio/"
-BASE_IMAGE_URL = "https://langgraph-lesson-modifier.onrender.com/images/"
-
-def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list) -> dict:
+def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list, mode: str = "placeholder") -> dict:
     file_id = uuid.uuid4().hex
     txt_filename = f"final_lesson_{file_id}.txt"
     json_filename = f"final_lesson_{file_id}.json"
@@ -25,19 +22,7 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
     json_path = os.path.join(FINAL_JSON_DIR, json_filename)
     md_path = os.path.join(FINAL_MD_DIR, md_filename)
 
-    # Valid file names from actual downloads
-    valid_images = [os.path.basename(p) for p in image_paths]
-    valid_audios = [os.path.basename(p) for p in audio_paths]
-
-    # === TXT Output ===
     enriched_text = lesson_text
-    for path in image_paths:
-        fname = os.path.basename(path)
-        enriched_text = enriched_text.replace(f"[IMAGE:{fname}]", f"\n🔍 [Insert Image: {fname}]\n")
-    for path in audio_paths:
-        fname = os.path.basename(path)
-        enriched_text = enriched_text.replace(f"[AUDIO:{fname}]", f"\n🔊 [Insert Audio: {fname}]\n")
-
     with open(txt_path, "w") as f:
         f.write(enriched_text)
 
@@ -51,7 +36,6 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
             md_lines.append("")
             continue
 
-        # Markdown Formatting
         if stripped.lower().startswith("title:"):
             md_lines.append(f"# {stripped.replace('Title:', '').strip()}")
             continue
@@ -65,31 +49,17 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
             md_lines.append(f"**{stripped}**")
             continue
 
-        # Audio
+        # Preserve placeholders as plain text
         audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", stripped)
         if audio_match:
-            filename = audio_match.group(1).strip()
-            if filename in valid_audios and filename.endswith(".mp3"):
-                audio_url = f"{BASE_AUDIO_URL}{urllib.parse.quote(filename)}"
-                md_lines.append(
-                    f'<audio controls>\n  <source src="{audio_url}" type="audio/mpeg">\n  Your browser does not support the audio element.\n</audio>'
-                )
-            else:
-                md_lines.append(f"<!-- Invalid audio reference: {filename} -->")
+            md_lines.append(f"🔊 [Insert Audio: {audio_match.group(1).strip()}]")
             continue
 
-        # Image
         image_match = re.search(r"\[Insert Image:\s*(.+?)\]", stripped)
         if image_match:
-            filename = image_match.group(1).strip()
-            if filename in valid_images:
-                image_url = f"{BASE_IMAGE_URL}{urllib.parse.quote(filename)}"
-                md_lines.append(f"![Visual]({image_url})")
-            else:
-                md_lines.append(f"<!-- Invalid image reference: {filename} -->")
+            md_lines.append(f"🔍 [Insert Image: {image_match.group(1).strip()}]")
             continue
 
-        # Plain text
         md_lines.append(stripped)
 
     with open(md_path, "w") as md:
@@ -100,16 +70,12 @@ def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list
     for line in lines:
         audio_match = re.search(r"\[Insert Audio:\s*(.+?)\]", line)
         if audio_match:
-            fname = audio_match.group(1).strip()
-            if fname in valid_audios:
-                blocks.append({"type": "audio", "src": f"{BASE_AUDIO_URL}{urllib.parse.quote(fname)}"})
+            blocks.append({"type": "audio", "placeholder": audio_match.group(1).strip()})
             continue
 
         image_match = re.search(r"\[Insert Image:\s*(.+?)\]", line)
         if image_match:
-            fname = image_match.group(1).strip()
-            if fname in valid_images:
-                blocks.append({"type": "image", "src": f"{BASE_IMAGE_URL}{urllib.parse.quote(fname)}"})
+            blocks.append({"type": "image", "placeholder": image_match.group(1).strip()})
             continue
 
         text_content = line.strip()
