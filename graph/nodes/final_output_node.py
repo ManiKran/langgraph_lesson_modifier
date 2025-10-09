@@ -1,4 +1,4 @@
-from tools.output.generate import generate_final_output_placeholder
+from tools.output.generate import generate_final_output
 
 def final_output_node(state: dict) -> dict:
     """
@@ -10,7 +10,7 @@ def final_output_node(state: dict) -> dict:
     if not lesson_text:
         raise ValueError("Missing modified_lesson_text in state.")
 
-    result = generate_final_output_placeholder(lesson_text)
+    result = generate_final_output(lesson_text)
 
     state.update({
         "final_output_path": result["txt_path"],
