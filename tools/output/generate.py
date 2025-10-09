@@ -12,7 +12,7 @@ os.makedirs(FINAL_TXT_DIR, exist_ok=True)
 os.makedirs(FINAL_JSON_DIR, exist_ok=True)
 os.makedirs(FINAL_MD_DIR, exist_ok=True)
 
-def generate_final_output(lesson_text: str, image_paths: list, audio_paths: list, mode: str = "placeholder") -> dict:
+def generate_final_output(lesson_text: str) -> dict:
     file_id = uuid.uuid4().hex
     txt_filename = f"final_lesson_{file_id}.txt"
     json_filename = f"final_lesson_{file_id}.json"
