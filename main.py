@@ -113,50 +113,54 @@ from bs4 import BeautifulSoup
 
 @app.post("/api/save_markdown")
 async def save_markdown(request: Request):
-    data = await request.json()
-    html = data.get("markdown", "")
-    user_id = data.get("user_id", "anon")
+    try:
+        data = await request.json()
+        html = data.get("markdown", "")
+        user_id = data.get("user_id", "anon")
 
-    # === STEP 1: Clean HTML ===
-    soup = BeautifulSoup(html, "html.parser")
+        # === STEP 1: Clean HTML ===
+        soup = BeautifulSoup(html, "html.parser")
 
-    # Remove unnecessary attributes like style, class, contenteditable
-    for tag in soup.find_all(True):
-        for attr in ["style", "class", "contenteditable", "data-type", "data-id"]:
-            if attr in tag.attrs:
-                del tag.attrs[attr]
+        # Remove unwanted attributes
+        for tag in soup.find_all(True):
+            for attr in ["style", "class", "contenteditable", "data-type", "data-id"]:
+                if attr in tag.attrs:
+                    del tag.attrs[attr]
 
-    # Make sure audio tags are replaced with ALT-TEXT for Markdown
-    for audio in soup.find_all("audio"):
-        # Extract placeholder info if present
-        audio_parent = audio.find_parent("span")
-        if audio_parent:
-            alt_text = audio_parent.text.strip()
-        else:
-            alt_text = "[AUDIO]"
-        audio.replace_with(f"\n\n{alt_text}\n\n")
+        # Replace <audio> tags with placeholder alt text
+        for audio in soup.find_all("audio"):
+            audio_parent = audio.find_parent("span")
+            if audio_parent:
+                alt_text = audio_parent.text.strip()
+            else:
+                alt_text = "[AUDIO]"
+            audio.replace_with(f"\n\n{alt_text}\n\n")
 
-    # Same for image placeholders wrapped in span
-    for span in soup.find_all("span"):
-        if span.text.strip().startswith("[IMAGE:"):
-            alt_text = span.text.strip()
-            span.replace_with(f"\n\n{alt_text}\n\n")
+        # Replace [IMAGE:...] placeholders in <span> with text
+        for span in soup.find_all("span"):
+            if span.text.strip().startswith("[IMAGE:"):
+                alt_text = span.text.strip()
+                span.replace_with(f"\n\n{alt_text}\n\n")
 
-    # === STEP 2: Convert cleaned HTML to Markdown ===
-    cleaned_html = str(soup)
-    markdown = html2text.html2text(cleaned_html)
+        # === STEP 2: Convert to Markdown ===
+        cleaned_html = str(soup)
+        markdown = html2text.html2text(cleaned_html)
 
-    # === STEP 3: Save as .md file ===
-    filename = f"{user_id}_{uuid.uuid4().hex}.md"
-    save_dir = "data/outputs/markdown"
-    os.makedirs(save_dir, exist_ok=True)
-    file_path = os.path.join(save_dir, filename)
+        # === STEP 3: Save to .md file ===
+        filename = f"{user_id}_{uuid.uuid4().hex}.md"
+        save_dir = "data/outputs/markdown"
+        os.makedirs(save_dir, exist_ok=True)
+        file_path = os.path.join(save_dir, filename)
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        f.write(markdown)
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(markdown)
 
-    file_url = f"https://langgraph-lesson-modifier.onrender.com/markdown/{filename}"
-    return {"url": file_url}
+        # === STEP 4: Return URL ===
+        file_url = f"https://langgraph-lesson-modifier.onrender.com/markdown/{filename}"
+        return {"url": file_url}
+
+    except Exception as e:
+        return {"error": str(e)}
 
 # ===== Static File Routes =====
 app.mount("/files", StaticFiles(directory="data/outputs/final"), name="files")
