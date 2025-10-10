@@ -109,6 +109,7 @@ async def upload_image(file: UploadFile = File(...)):
 
 # ===== Saving Modified Output file =====
 import html2text
+from bs4 import BeautifulSoup
 
 @app.post("/api/save_markdown")
 async def save_markdown(request: Request):
@@ -116,13 +117,40 @@ async def save_markdown(request: Request):
     html = data.get("markdown", "")
     user_id = data.get("user_id", "anon")
 
-    # Convert HTML back to Markdown
-    markdown = html2text.html2text(html)
+    # === STEP 1: Clean HTML ===
+    soup = BeautifulSoup(html, "html.parser")
 
+    # Remove unnecessary attributes like style, class, contenteditable
+    for tag in soup.find_all(True):
+        for attr in ["style", "class", "contenteditable", "data-type", "data-id"]:
+            if attr in tag.attrs:
+                del tag.attrs[attr]
+
+    # Make sure audio tags are replaced with ALT-TEXT for Markdown
+    for audio in soup.find_all("audio"):
+        # Extract placeholder info if present
+        audio_parent = audio.find_parent("span")
+        if audio_parent:
+            alt_text = audio_parent.text.strip()
+        else:
+            alt_text = "[AUDIO]"
+        audio.replace_with(f"\n\n{alt_text}\n\n")
+
+    # Same for image placeholders wrapped in span
+    for span in soup.find_all("span"):
+        if span.text.strip().startswith("[IMAGE:"):
+            alt_text = span.text.strip()
+            span.replace_with(f"\n\n{alt_text}\n\n")
+
+    # === STEP 2: Convert cleaned HTML to Markdown ===
+    cleaned_html = str(soup)
+    markdown = html2text.html2text(cleaned_html)
+
+    # === STEP 3: Save as .md file ===
     filename = f"{user_id}_{uuid.uuid4().hex}.md"
     save_dir = "data/outputs/markdown"
-    file_path = os.path.join(save_dir, filename)
     os.makedirs(save_dir, exist_ok=True)
+    file_path = os.path.join(save_dir, filename)
 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(markdown)

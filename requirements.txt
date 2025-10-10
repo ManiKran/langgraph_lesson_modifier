@@ -18,3 +18,4 @@ PyMuPDF
 uvicorn
 google-search-results
 html2text
+bs4
