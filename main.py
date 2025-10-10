@@ -108,25 +108,27 @@ async def upload_image(file: UploadFile = File(...)):
 
 
 # ===== Saving Modified Output file =====
+import html2text
+
 @app.post("/api/save_markdown")
 async def save_markdown(request: Request):
     data = await request.json()
-    markdown = data.get("markdown", "")
+    html = data.get("markdown", "")
     user_id = data.get("user_id", "anon")
 
-    filename = f"{user_id}_{uuid.uuid4().hex}.md"
-    save_dir = "data/outputs/markdown"  # MATCHES /markdown mount
-    file_path = os.path.join(save_dir, filename)
+    # Convert HTML back to Markdown
+    markdown = html2text.html2text(html)
 
+    filename = f"{user_id}_{uuid.uuid4().hex}.md"
+    save_dir = "data/outputs/markdown"
+    file_path = os.path.join(save_dir, filename)
     os.makedirs(save_dir, exist_ok=True)
 
     with open(file_path, "w", encoding="utf-8") as f:
         f.write(markdown)
 
-    base_url = "https://langgraph-lesson-modifier.onrender.com"
-    file_url = f"{base_url}/markdown/{filename}"
-
-    return { "url": file_url }
+    file_url = f"https://langgraph-lesson-modifier.onrender.com/markdown/{filename}"
+    return {"url": file_url}
 
 # ===== Static File Routes =====
 app.mount("/files", StaticFiles(directory="data/outputs/final"), name="files")
