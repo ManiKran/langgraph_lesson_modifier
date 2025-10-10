@@ -106,6 +106,28 @@ async def upload_image(file: UploadFile = File(...)):
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 
+
+# ===== Saving Modified Output file =====
+@app.post("/api/save_markdown")
+async def save_markdown(request: Request):
+    data = await request.json()
+    markdown = data.get("markdown", "")
+    user_id = data.get("user_id", "anon")
+
+    filename = f"{user_id}_{uuid.uuid4().hex}.md"
+    save_dir = "data/outputs/markdown"  # MATCHES /markdown mount
+    file_path = os.path.join(save_dir, filename)
+
+    os.makedirs(save_dir, exist_ok=True)
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        f.write(markdown)
+
+    base_url = "https://langgraph-lesson-modifier.onrender.com"
+    file_url = f"{base_url}/markdown/{filename}"
+
+    return { "url": file_url }
+
 # ===== Static File Routes =====
 app.mount("/files", StaticFiles(directory="data/outputs/final"), name="files")
 app.mount("/json", StaticFiles(directory="data/outputs/json"), name="json")
