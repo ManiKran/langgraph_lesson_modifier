@@ -12,6 +12,7 @@ import os
 import uuid
 import shutil
 
+from tools.llm.student_map_updater import update_rule_file_based_on_feedback
 from tools.audio.generate import generate_audio_file
 from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 from graph.lesson_placeholder_graph import lesson_placeholders_app
@@ -44,6 +45,13 @@ class ModifyLessonRequest(BaseModel):
 class GenerateAudioRequest(BaseModel):
     prompt: str
 
+class RuleUpdateRequest(BaseModel):
+    rule_file: List[str]
+    feedback: str
+
+class RuleUpdateResponse(BaseModel):
+    updated_rule_file: List[str]
+
 # ===== Root Route =====
 @app.get("/")
 def root():
@@ -70,6 +78,17 @@ async def full_pipeline(request: FullPipelineRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
+
+
+# ===== Update rules on Feedback =====
+@app.post("/update-rule-file", response_model=RuleUpdateResponse)
+async def update_rule_file(request: RuleUpdateRequest):
+    try:
+        updated_rules = update_rule_file_based_on_feedback(request.rule_file, request.feedback)
+        return {"updated_rule_file": updated_rules}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/lesson_from_rules")
 async def generate_lesson_from_existing_rules(request: ShortPipelineRequest):
