@@ -103,6 +103,7 @@ async def save_markdown(request: Request):
     try:
         data = await request.json()
         html = data.get("markdown", "")
+        print(html)
         user_id = data.get("user_id", "anon")
 
         # Step 1: Clean HTML
