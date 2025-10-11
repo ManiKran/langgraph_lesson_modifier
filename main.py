@@ -15,7 +15,7 @@ import shutil
 from tools.audio.generate import generate_audio_file
 from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 from graph.lesson_placeholder_graph import lesson_placeholders_app
-from graph.short_lesson_placeholder_graph import short_lesson_placeholders_app
+from graph.lesson_graph_from_rules import lesson_from_rules_app
 
 app = FastAPI(title="Lesson Modifier API - Placeholder Based")
 
@@ -70,12 +70,10 @@ async def full_pipeline(request: FullPipelineRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
 
-
-# ===== short Pipeline: Placeholder only =====
-@app.post("/short-pipeline")
-async def short_pipeline(request: ShortPipelineRequest):
+@app.post("/lesson_from_rules")
+async def generate_lesson_from_existing_rules(request: ShortPipelineRequest):
     try:
-        result = short_lesson_placeholders_app.invoke({
+        result = lesson_from_rules_app.invoke({
             "rules": request.rules,
             "lesson_url": str(request.lesson_url)
         })
@@ -90,7 +88,9 @@ async def short_pipeline(request: ShortPipelineRequest):
             "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_file}"
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Lesson from rules pipeline failed: {str(e)}")
+    
+    
 
 # ===== Image Search for Placeholder Replacement =====
 @app.get("/api/search_images")
@@ -100,6 +100,7 @@ async def search_images(q: str = Query(...)):
         return download_images(urls)
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    
 
 # ===== Generate Audio on Demand =====
 @app.post("/api/generate_audio")
