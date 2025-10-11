@@ -97,6 +97,7 @@ async def upload_audio(file: UploadFile = File(...)):
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ===== Upload Image =====
+@app.post("/api/save_markdown")  # ← This adds the route
 async def save_markdown(request: Request):
     try:
         data = await request.json()
@@ -111,24 +112,22 @@ async def save_markdown(request: Request):
 
         # Step 2: Replace audio tags with descriptive placeholders
         for audio in soup.find_all("audio"):
-            # Check if there is a preceding tag with 📢 or 🔊 or label
             previous = audio.find_previous(string=True)
             placeholder = previous.strip() if previous else "[AUDIO]"
             audio.replace_with(f"\n\n{placeholder}\n\n")
 
-        # Step 3: Replace span tags that look like [IMAGE: ...] placeholders
+        # Step 3: Replace [IMAGE: ...] placeholders
         for span in soup.find_all("span"):
             text = span.get_text(strip=True)
             if "[IMAGE:" in text:
-                # Clean out extra ✎ or icons
                 cleaned = text.split("✎")[0].strip()
                 span.replace_with(f"\n\n{cleaned}\n\n")
 
-        # Step 4: Convert cleaned HTML to markdown
+        # Step 4: Convert to Markdown
         cleaned_html = str(soup)
         markdown = html2text.html2text(cleaned_html)
 
-        # Step 5: Save .md file
+        # Step 5: Save file
         filename = f"{user_id}_{uuid.uuid4().hex}.md"
         save_dir = "data/outputs/markdown"
         os.makedirs(save_dir, exist_ok=True)
