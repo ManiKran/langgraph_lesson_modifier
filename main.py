@@ -15,6 +15,7 @@ import shutil
 from tools.audio.generate import generate_audio_file
 from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 from graph.lesson_placeholder_graph import lesson_placeholders_app
+from graph.lesson_placeholder_graph import short_lesson_placeholders_app
 
 app = FastAPI(title="Lesson Modifier API - Placeholder Based")
 
@@ -30,6 +31,10 @@ app.add_middleware(
 # ===== Request Models =====
 class FullPipelineRequest(BaseModel):
     student_profile: Dict[str, Union[str, List[str]]]
+    lesson_url: HttpUrl
+
+class ShortPipelineRequest(BaseModel):
+    rules: List[str]
     lesson_url: HttpUrl
 
 class ModifyLessonRequest(BaseModel):
@@ -50,6 +55,28 @@ async def full_pipeline(request: FullPipelineRequest):
     try:
         result = lesson_placeholders_app.invoke({
             "student_profile": request.student_profile,
+            "lesson_url": str(request.lesson_url)
+        })
+
+        md_file = os.path.basename(result["final_output_md"])
+        json_file = os.path.basename(result["final_output_json"])
+        txt_file = os.path.basename(result["final_output_path"])
+
+        return {
+            "final_output_md": f"https://langgraph-lesson-modifier.onrender.com/markdown/{md_file}",
+            "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_file}",
+            "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_file}"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Full pipeline failed: {str(e)}")
+
+
+# ===== short Pipeline: Placeholder only =====
+@app.post("/short-pipeline")
+async def short_pipeline(request: ShortPipelineRequest):
+    try:
+        result = short_lesson_placeholders_app.invoke({
+            "rules": request.rules,
             "lesson_url": str(request.lesson_url)
         })
 
