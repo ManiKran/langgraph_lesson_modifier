@@ -6,6 +6,8 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, HttpUrl
 from typing import Dict, List, Union
+from bs4 import BeautifulSoup
+import html2text
 import os
 import uuid
 import shutil
@@ -95,67 +97,45 @@ async def upload_audio(file: UploadFile = File(...)):
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ===== Upload Image =====
-@app.post("/api/upload_image")
-async def upload_image(file: UploadFile = File(...)):
-    try:
-        out_path = f"data/outputs/images/{uuid.uuid4().hex}_{file.filename}"
-        with open(out_path, "wb") as out_file:
-            shutil.copyfileobj(file.file, out_file)
-        filename = os.path.basename(out_path)
-        return {"image_url": f"https://langgraph-lesson-modifier.onrender.com/images/{filename}"}
-    except Exception as e:
-        return JSONResponse(status_code=500, content={"error": str(e)})
-
-
-# ===== Saving Modified Output file =====
-import html2text
-from bs4 import BeautifulSoup
-
-@app.post("/api/save_markdown")
 async def save_markdown(request: Request):
     try:
         data = await request.json()
         html = data.get("markdown", "")
         user_id = data.get("user_id", "anon")
 
-        # === STEP 1: Clean HTML ===
+        # Step 1: Clean HTML
         soup = BeautifulSoup(html, "html.parser")
-
-        # Remove unwanted attributes
         for tag in soup.find_all(True):
             for attr in ["style", "class", "contenteditable", "data-type", "data-id"]:
-                if attr in tag.attrs:
-                    del tag.attrs[attr]
+                tag.attrs.pop(attr, None)
 
-        # Replace <audio> tags with placeholder alt text
+        # Step 2: Replace audio tags with descriptive placeholders
         for audio in soup.find_all("audio"):
-            audio_parent = audio.find_parent("span")
-            if audio_parent:
-                alt_text = audio_parent.text.strip()
-            else:
-                alt_text = "[AUDIO]"
-            audio.replace_with(f"\n\n{alt_text}\n\n")
+            # Check if there is a preceding tag with 📢 or 🔊 or label
+            previous = audio.find_previous(string=True)
+            placeholder = previous.strip() if previous else "[AUDIO]"
+            audio.replace_with(f"\n\n{placeholder}\n\n")
 
-        # Replace [IMAGE:...] placeholders in <span> with text
+        # Step 3: Replace span tags that look like [IMAGE: ...] placeholders
         for span in soup.find_all("span"):
-            if span.text.strip().startswith("[IMAGE:"):
-                alt_text = span.text.strip()
-                span.replace_with(f"\n\n{alt_text}\n\n")
+            text = span.get_text(strip=True)
+            if "[IMAGE:" in text:
+                # Clean out extra ✎ or icons
+                cleaned = text.split("✎")[0].strip()
+                span.replace_with(f"\n\n{cleaned}\n\n")
 
-        # === STEP 2: Convert to Markdown ===
+        # Step 4: Convert cleaned HTML to markdown
         cleaned_html = str(soup)
         markdown = html2text.html2text(cleaned_html)
 
-        # === STEP 3: Save to .md file ===
+        # Step 5: Save .md file
         filename = f"{user_id}_{uuid.uuid4().hex}.md"
         save_dir = "data/outputs/markdown"
         os.makedirs(save_dir, exist_ok=True)
         file_path = os.path.join(save_dir, filename)
-
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(markdown)
 
-        # === STEP 4: Return URL ===
         file_url = f"https://langgraph-lesson-modifier.onrender.com/markdown/{filename}"
         return {"url": file_url}
 
