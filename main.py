@@ -101,6 +101,7 @@ async def upload_audio(file: UploadFile = File(...)):
 async def save_markdown(request: Request):
     print("Received request to /api/save_markdown")
     try:
+        print("i am here 1")
         data = await request.json()
         print("🔍 Incoming request body:", data)
 
@@ -146,6 +147,8 @@ async def save_markdown(request: Request):
         return {"url": file_url}
 
     except Exception as e:
+        print("i am here 2")
+        print("Error in /api/save_markdown:", str(e))
         return {"error": str(e)}
 
 # ===== Static File Routes =====
