@@ -136,7 +136,14 @@ async def save_markdown(request: Request):
 
         # Step 4: Convert to Markdown
         cleaned_html = str(soup)
-        markdown = html2text.html2text(cleaned_html)
+
+        converter = html2text.HTML2Text()
+        converter.body_width = 0                # ✅ Disable auto line breaks
+        converter.ignore_links = False
+        converter.ignore_images = False
+        converter.ignore_emphasis = False
+        converter.protect_links = True          # ✅ Keeps full URLs safe
+        markdown = converter.handle(cleaned_html)
 
         # Step 5: Save file
         filename = f"{user_id}_{uuid.uuid4().hex}.md"
