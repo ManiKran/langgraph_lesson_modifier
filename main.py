@@ -15,7 +15,7 @@ import shutil
 from tools.audio.generate import generate_audio_file
 from tools.visuals.fetch import get_image_urls_from_serpapi, download_images
 from graph.lesson_placeholder_graph import lesson_placeholders_app
-from graph.lesson_placeholder_graph import short_lesson_placeholders_app
+from graph.short_lesson_placeholder_graph import short_lesson_placeholders_app
 
 app = FastAPI(title="Lesson Modifier API - Placeholder Based")
 
