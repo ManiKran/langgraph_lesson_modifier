@@ -117,10 +117,14 @@ async def save_markdown(request: Request):
             for attr in ["style", "class", "contenteditable", "data-type", "data-id"]:
                 tag.attrs.pop(attr, None)
 
-        # Step 2: Replace audio tags with descriptive placeholders
+        # Step 2: Replace <audio> with proper markdown links
         for audio in soup.find_all("audio"):
-            previous = audio.find_previous(string=True)
-            placeholder = previous.strip() if previous else "[AUDIO]"
+            source_tag = audio.find("source")
+            if source_tag and source_tag.has_attr("src"):
+                audio_url = source_tag["src"]
+                placeholder = f"[AUDIO: {audio_url}]"
+            else:
+                placeholder = "[AUDIO]"
             audio.replace_with(f"\n\n{placeholder}\n\n")
 
         # Step 3: Replace [IMAGE: ...] placeholders
