@@ -63,6 +63,7 @@ async def full_pipeline(request: FullPipelineRequest):
         txt_file = os.path.basename(result["final_output_path"])
 
         return {
+            "rules": result.get("rules", []),
             "final_output_md": f"https://langgraph-lesson-modifier.onrender.com/markdown/{md_file}",
             "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_file}",
             "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_file}"
@@ -90,7 +91,7 @@ async def generate_lesson_from_existing_rules(request: ShortPipelineRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lesson from rules pipeline failed: {str(e)}")
     
-    
+
 
 # ===== Image Search for Placeholder Replacement =====
 @app.get("/api/search_images")
