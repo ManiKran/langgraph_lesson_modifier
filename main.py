@@ -99,6 +99,7 @@ async def upload_audio(file: UploadFile = File(...)):
 # ===== Upload Image =====
 @app.post("/api/save_markdown")  # ← This adds the route
 async def save_markdown(request: Request):
+    print("Received request to /api/save_markdown")
     try:
         data = await request.json()
         html = data.get("markdown", "")
@@ -136,6 +137,7 @@ async def save_markdown(request: Request):
             f.write(markdown)
 
         file_url = f"https://langgraph-lesson-modifier.onrender.com/markdown/{filename}"
+        print(file_url)
         return {"url": file_url}
 
     except Exception as e:
