@@ -102,9 +102,13 @@ async def save_markdown(request: Request):
     print("Received request to /api/save_markdown")
     try:
         data = await request.json()
+        print("🔍 Incoming request body:", data)
+
         html = data.get("markdown", "")
-        print(html)
+        print("📝 Extracted HTML:", html if html else "[EMPTY]")
+
         user_id = data.get("user_id", "anon")
+        print("👤 Extracted User ID:", user_id)
 
         # Step 1: Clean HTML
         soup = BeautifulSoup(html, "html.parser")
