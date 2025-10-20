@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lesson Editor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="editor-toolbar">
+    <h2>Lesson Editor</h2>
+  </div>
+  <div id="lesson-container" contenteditable="true" spellcheck="false">
+    Loading lesson...
+  </div>
+  <div id="context-menu">
+    <div id="insert-image">Insert Image</div>
+    <div id="insert-audio">Insert Audio</div>
+  </div>
+  <div id="side-panel">
+    <div id="panel-header">
+      <span id="panel-title">Media Tools</span>
+      <button id="close-panel">×</button>
+    </div>
+    <div id="panel-content">
+      <!-- Dynamic content -->
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
