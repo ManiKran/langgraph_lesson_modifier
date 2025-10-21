@@ -29,7 +29,7 @@ def modify_lesson_node(state: dict) -> dict:
     rules = state.get("rules")
     lesson_content = state.get("lesson_content")
     file_category = state.get("file_category", "Lesson")
-    number_of_days = state.get("number_of_days", 1)
+    number_of_days = state.get("num_days", 1)
 
     if not rules:
         raise ValueError("Missing 'rules' in state.")
