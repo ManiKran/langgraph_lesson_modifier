@@ -1,64 +1,115 @@
 body {
   margin: 0;
-  font-family: sans-serif;
-  background: #f4f4f4;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: #000;
+  color: #fff;
 }
 
 #editor-toolbar {
-  padding: 10px;
-  background-color: #222;
-  color: white;
+  background: #111;
+  padding: 15px;
+  border-bottom: 1px solid #333;
   text-align: center;
 }
 
 #lesson-container {
   padding: 20px;
-  min-height: 80vh;
-  background: white;
-  margin: 10px;
-  border: 1px solid #ccc;
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-y: auto;
+  height: calc(100vh - 70px);
 }
 
+/* Headings */
+#lesson-container h2 {
+  color: #f2f2f2;
+  font-size: 24px;
+  margin: 25px 0 10px;
+}
+
+#lesson-container h3 {
+  color: #dcdcdc;
+  font-size: 20px;
+  margin: 20px 0 8px;
+}
+
+/* Images and Audio */
+#lesson-container img {
+  display: block;
+  max-width: 100%;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#lesson-container audio {
+  width: 100%;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+/* Context Menu */
 #context-menu {
-  display: none;
   position: absolute;
-  background: white;
-  border: 1px solid #ccc;
+  background: #111;
+  border: 1px solid #444;
+  display: none;
   z-index: 1000;
+  border-radius: 6px;
+  min-width: 150px;
 }
 
 #context-menu div {
   padding: 10px;
   cursor: pointer;
+  color: #ddd;
 }
 
 #context-menu div:hover {
-  background-color: #eee;
+  background: #333;
 }
 
+/* Side Panel */
 #side-panel {
-  display: none;
   position: fixed;
+  right: -400px;
   top: 0;
-  right: 0;
-  width: 300px;
-  height: 100%;
-  background: #fff;
-  border-left: 2px solid #ccc;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-  z-index: 1001;
+  height: 100vh;
+  width: 400px;
+  background: #111;
+  color: #fff;
+  border-left: 2px solid #444;
+  display: flex;
   flex-direction: column;
+  padding: 20px;
+  z-index: 999;
+  transition: right 0.3s ease-in-out;
 }
 
 #panel-header {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  background: #222;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#close-panel {
+  background: red;
   color: white;
+  border: none;
+  padding: 4px 8px;
+  font-size: 18px;
+  cursor: pointer;
 }
 
 #panel-content {
-  padding: 10px;
+  flex: 1;
   overflow-y: auto;
+}
+
+#panel-content img {
+  max-width: 100%;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 6px;
 }

@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lesson Editor</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <!-- ✅ Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
   <div id="editor-toolbar">
     <h2>Lesson Editor</h2>
   </div>
+
+  <!-- Editable Lesson Area -->
   <div id="lesson-container" contenteditable="true" spellcheck="false">
     Loading lesson...
   </div>
+
+  <!-- Context Menu -->
   <div id="context-menu">
     <div id="insert-image">Insert Image</div>
     <div id="insert-audio">Insert Audio</div>
   </div>
+
+  <!-- Side Panel -->
   <div id="side-panel">
     <div id="panel-header">
       <span id="panel-title">Media Tools</span>
@@ -25,6 +34,7 @@
       <!-- Dynamic content -->
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
