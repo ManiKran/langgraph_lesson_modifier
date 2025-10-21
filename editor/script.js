@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     contextMenu.style.display = "block";
   });
 
-  // Hide menu when clicking outside
+  // Hide context menu on click
   document.addEventListener("click", () => {
     contextMenu.style.display = "none";
   });
@@ -90,8 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
         images.forEach(url => {
           const img = document.createElement("img");
           img.src = url;
+          img.style.cursor = "pointer";
+          img.style.margin = "5px";
           img.onclick = () => {
-            insertAtCursor(`<img src="${url}" alt="Lesson Image">`);
+            insertAtCursor(`<img src="${url}" alt="Lesson Image" style="resize: both; overflow: auto; display: block;">`);
             sidePanel.style.right = "-400px";
           };
           resultsDiv.appendChild(img);
@@ -114,7 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then(res => res.json())
       .then(data => {
-        const audioHTML = `<audio controls><source src="${data.audio_url}" type="audio/mpeg"></audio>`;
+        const audioHTML = `
+          <audio controls style="resize: both; overflow: auto; display: block;">
+            <source src="${data.audio_url}" type="audio/mpeg">
+          </audio>
+        `;
         insertAtCursor(audioHTML);
         sidePanel.style.right = "-400px";
       })
@@ -123,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // 🔹 Helper: Insert HTML at the clicked position
+  // 🔹 Insert HTML at clicked position
   function insertAtCursor(html) {
     const range = document.caretRangeFromPoint(contextX, contextY);
     if (!range) return;
@@ -131,39 +137,17 @@ document.addEventListener("DOMContentLoaded", () => {
     range.insertNode(frag);
   }
 
-  // 🔹 Double-click image to edit or replace
+  // 🔹 Double-click image or audio to enable resizing
   container.addEventListener("dblclick", (e) => {
-    if (e.target.tagName === "IMG") {
-      const currentImg = e.target;
-      const currentAlt = currentImg.alt || "";
-      const currentSrc = currentImg.src;
+    if (e.target.tagName === "IMG" || e.target.tagName === "AUDIO") {
+      const elem = e.target;
 
-      const newAlt = prompt("Edit alt text:", currentAlt);
-      if (newAlt === null) return;
-      currentImg.alt = newAlt;
-
-      const replace = confirm("Do you want to replace this image?");
-      if (replace) {
-        const newUrl = prompt("Enter new image URL:", currentSrc);
-        if (newUrl && newUrl !== currentSrc) {
-          currentImg.src = newUrl;
-        }
-      }
-    }
-  });
-
-  // 🔹 Double-click audio to replace source
-  container.addEventListener("dblclick", (e) => {
-    if (e.target.tagName === "AUDIO" || e.target.closest("audio")) {
-      const audioElem = e.target.tagName === "AUDIO" ? e.target : e.target.closest("audio");
-      const sourceElem = audioElem.querySelector("source");
-      const currentSrc = sourceElem?.src || "";
-
-      const newSrc = prompt("Enter new audio file URL:", currentSrc);
-      if (newSrc && newSrc !== currentSrc) {
-        sourceElem.src = newSrc;
-        audioElem.load(); // Reload audio
-      }
+      // Make it resizable and visible as such
+      elem.style.resize = "both";
+      elem.style.overflow = "auto";
+      elem.style.outline = "2px dashed #888";
+      elem.style.outlineOffset = "3px";
+      elem.style.display = "inline-block";
     }
   });
 });

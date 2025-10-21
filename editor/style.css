@@ -22,16 +22,22 @@ body {
   height: calc(100vh - 70px);
 }
 
-#lesson-container img:hover {
+/* ✅ NEW: Make image/audio visibly resizable when double-clicked */
+#lesson-container img.resizable,
+#lesson-container audio.resizable {
+  resize: both;
+  overflow: auto;
   outline: 2px dashed #888;
   outline-offset: 4px;
-  cursor: nwse-resize;
+  display: inline-block;
 }
 
-#lesson-container audio {
-  width: 300px;  /* or 100% for responsiveness */
-  margin: 10px 0;
-  cursor: pointer;
+/* ✅ Optional: Add hover effect to hint at resizability */
+#lesson-container img:hover,
+#lesson-container audio:hover {
+  outline: 2px dashed #aaa;
+  outline-offset: 4px;
+  cursor: nwse-resize;
 }
 
 /* Headings */
