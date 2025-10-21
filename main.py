@@ -114,7 +114,8 @@ async def generate_lesson_from_existing_rules(request: ShortPipelineRequest):
         return {
             "final_output_md": f"https://langgraph-lesson-modifier.onrender.com/markdown/{md_file}",
             "final_output_json": f"https://langgraph-lesson-modifier.onrender.com/json/{json_file}",
-            "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_file}"
+            "final_output_path": f"https://langgraph-lesson-modifier.onrender.com/files/{txt_file}",
+            "editor_url": f"https://langgraph-lesson-modifier.onrender.com/editor/index.html?file={md_file}"
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Lesson from rules pipeline failed: {str(e)}")
