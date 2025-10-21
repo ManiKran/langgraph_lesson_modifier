@@ -63,7 +63,9 @@ async def full_pipeline(request: FullPipelineRequest):
     try:
         result = lesson_placeholders_app.invoke({
             "student_profile": request.student_profile,
-            "lesson_url": str(request.lesson_url)
+            "lesson_url": str(request.lesson_url),
+            "num_days": request.num_days,                 # 🆕 Passed to your graph/pipeline
+            "file_category": str(request.file_category)
         })
 
         md_file = os.path.basename(result["final_output_md"])

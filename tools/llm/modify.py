@@ -89,3 +89,82 @@ Now produce the fully modified lesson based on the student profile rules.
 
     except Exception as e:
         raise RuntimeError(f"Failed to modify lesson with LLM: {str(e)}")
+    
+    
+
+def modify_lesson_content_worksheet(text: str, rules: List[str]) -> str:
+    """
+    Uses GPT‑4o to adapt worksheet content (questions, instructions, or exercises)
+    according to the provided student adaptation rules.
+
+    - Simplifies complex vocabulary and sentence structure.
+    - Adds bilingual support or translations if rules require.
+    - Adds [Insert Image: ...] and [Insert Audio: ...] placeholders only if rules demand media.
+    - Keeps the original worksheet’s logical structure (no Engager/I Do/We Do/You Do).
+    """
+
+    prompt = f"""
+You are an expert inclusive education designer adapting **worksheet content** for multilingual
+and special‑needs students.
+
+== Student Profile Rules ==
+{chr(10).join(f"- {rule}" for rule in rules)}
+
+== TASK ==
+You will rewrite the following worksheet according to these rules.
+Your job is to make the content **accessible, bilingual if needed, and engaging** — but
+without changing its basic structure.
+
+== GUIDELINES ==
+
+1. **Simplify and Support**
+   - Simplify complex words or grammar.
+   - If the student’s dominant language is mentioned in the rules (e.g., Hindi, Spanish, etc.),
+     include **translations in parentheses** beside hard vocabulary or complex phrases.
+   - Maintain question numbering, blanks, and formatting.
+
+2. **Media Placeholders**
+   - If rules mention “add visuals” or “use images,” insert `[Insert Image: ...]`
+     after the relevant question or section to help comprehension.
+   - If rules mention “add audio,” insert `[Insert Audio: ...]`
+     where reading or listening support would help the student understand better.
+   - Keep placeholders minimal and relevant.
+
+3. **Do NOT:**
+   - Summarize or remove any exercise.
+   - Add Engager/I Do/We Do/You Do structure.
+   - Introduce new unrelated questions.
+
+4. **Tone**
+   - Use a friendly, teacher-like tone that guides the student through the worksheet.
+   - Use plain, encouraging English with occasional bilingual scaffolding if required.
+
+== WORKSHEET INPUT ==
+\"\"\"{text}\"\"\"
+
+Now produce the adapted worksheet following all the student profile rules.
+Ensure that placeholders are included only if demanded by the rules.
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a multilingual inclusive education assistant. "
+                        "You rewrite worksheets for students with diverse learning and language needs, "
+                        "keeping the structure unchanged while adding supports and placeholders."
+                    )
+                },
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.4,
+            timeout=60
+        )
+
+        return response.choices[0].message.content.strip()
+
+    except Exception as e:
+        raise RuntimeError(f"Failed to modify worksheet with LLM: {str(e)}")

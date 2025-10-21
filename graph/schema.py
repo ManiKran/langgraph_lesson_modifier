@@ -17,8 +17,9 @@ class State(BaseModel):
     audio_paths: Optional[List[str]] = None
     image_paths: Optional[List[str]] = None
 
-    # new: final outputs
-    # new: final outputs
+    file_category: Optional[str] = "Lesson"   # e.g., "Lesson" or "Worksheet"
+    num_days: Optional[int] = 1 
+
     final_output_path: Optional[str] = None   # path to final .txt file
     final_output_json: Optional[str] = None  # path to final .json file for structured display
     final_output_md: Optional[str] = None    # ✅ path to final .md file
