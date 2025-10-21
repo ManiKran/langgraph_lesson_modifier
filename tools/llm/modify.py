@@ -38,7 +38,13 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
    🔸 If the rules require **bilingual scaffolding**, also add Dominant Language translations for whole sentences where the English may be too complex.  
    🔸 Use `[Insert Image: ...]` and `[Insert Audio: ...]` only if the rule demands media.  
    🔸 Do not skip any key detail from the original lesson — treat it as a full retelling, not an outline.  
-   🔸 Think of it as storytelling for a multilingual classroom, not as summarization.
+   🔸 Think of it as storytelling for a multilingual classroom, not as summarization.  
+   🔸 **Go paragraph by paragraph through the story**, retelling each one in full. For each paragraph:  
+       - Retell the events in simple teacher-style English.  
+       - Add reactions (“How might Icarus feel here?”).  
+       - Translate full sentences if the English is complex.  
+       - Embed Hindi translations (in parentheses) next to hard words.  
+       - Only insert images if it helps explain that specific part.
 
 3. **We Do**  
    Create a teacher-guided collaborative activity.  
