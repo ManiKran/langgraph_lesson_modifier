@@ -14,8 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch(`/markdown/${file}`)
       .then(res => res.text())
       .then(data => {
-        // ✅ Convert Markdown to HTML
-        container.innerHTML = marked.parse(data);
+        container.innerHTML = marked.parse(data); // ✅ Convert Markdown to HTML
       })
       .catch(err => {
         container.innerText = "Error loading file: " + err.message;
@@ -73,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sidePanel.style.right = "0px";
   };
 
-  // 🔹 Search Image Function (calls your FastAPI backend)
+  // 🔹 Search Image Function
   window.searchImage = function () {
     const q = document.getElementById("image-search").value.trim();
     if (!q) return;
@@ -103,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // 🔹 Generate Audio (calls your backend)
+  // 🔹 Generate Audio Function
   window.generateAudio = function () {
     const text = document.getElementById("audio-text").value.trim();
     if (!text) return;
@@ -124,47 +123,47 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // 🔹 Helper: Insert at caret position
+  // 🔹 Helper: Insert HTML at the clicked position
   function insertAtCursor(html) {
     const range = document.caretRangeFromPoint(contextX, contextY);
     if (!range) return;
     const frag = range.createContextualFragment(html);
     range.insertNode(frag);
   }
-});
 
-// 🔹 Double-click image to edit or replace
-container.addEventListener("dblclick", (e) => {
-  if (e.target.tagName === "IMG") {
-    const currentImg = e.target;
-    const currentAlt = currentImg.alt || "";
-    const currentSrc = currentImg.src;
+  // 🔹 Double-click image to edit or replace
+  container.addEventListener("dblclick", (e) => {
+    if (e.target.tagName === "IMG") {
+      const currentImg = e.target;
+      const currentAlt = currentImg.alt || "";
+      const currentSrc = currentImg.src;
 
-    const newAlt = prompt("Edit alt text:", currentAlt);
-    if (newAlt === null) return; // Cancelled
-    currentImg.alt = newAlt;
+      const newAlt = prompt("Edit alt text:", currentAlt);
+      if (newAlt === null) return;
+      currentImg.alt = newAlt;
 
-    const replace = confirm("Do you want to replace this image?");
-    if (replace) {
-      const newUrl = prompt("Enter new image URL:", currentSrc);
-      if (newUrl && newUrl !== currentSrc) {
-        currentImg.src = newUrl;
+      const replace = confirm("Do you want to replace this image?");
+      if (replace) {
+        const newUrl = prompt("Enter new image URL:", currentSrc);
+        if (newUrl && newUrl !== currentSrc) {
+          currentImg.src = newUrl;
+        }
       }
     }
-  }
-});
+  });
 
-// 🔹 Double-click audio to replace source
-container.addEventListener("dblclick", (e) => {
-  if (e.target.tagName === "AUDIO" || e.target.closest("audio")) {
-    const audioElem = e.target.tagName === "AUDIO" ? e.target : e.target.closest("audio");
-    const sourceElem = audioElem.querySelector("source");
-    const currentSrc = sourceElem?.src || "";
+  // 🔹 Double-click audio to replace source
+  container.addEventListener("dblclick", (e) => {
+    if (e.target.tagName === "AUDIO" || e.target.closest("audio")) {
+      const audioElem = e.target.tagName === "AUDIO" ? e.target : e.target.closest("audio");
+      const sourceElem = audioElem.querySelector("source");
+      const currentSrc = sourceElem?.src || "";
 
-    const newSrc = prompt("Enter new audio file URL:", currentSrc);
-    if (newSrc && newSrc !== currentSrc) {
-      sourceElem.src = newSrc;
-      audioElem.load(); // Reload with new source
+      const newSrc = prompt("Enter new audio file URL:", currentSrc);
+      if (newSrc && newSrc !== currentSrc) {
+        sourceElem.src = newSrc;
+        audioElem.load(); // Reload audio
+      }
     }
-  }
+  });
 });
