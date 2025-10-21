@@ -90,7 +90,7 @@ Now produce the fully modified lesson based on the student profile rules.
     except Exception as e:
         raise RuntimeError(f"Failed to modify lesson with LLM: {str(e)}")
     
-    
+
 
 def modify_lesson_content_worksheet(text: str, rules: List[str]) -> str:
     """
@@ -123,19 +123,38 @@ without changing its basic structure.
      include **translations in parentheses** beside hard vocabulary or complex phrases.
    - Maintain question numbering, blanks, and formatting.
 
-2. **Media Placeholders**
+2. **Multiple Choice Formatting**
+   - If you encounter multiple-choice questions (MCQs), display the options **inside a box**.
+   - Each option should appear on its **own row**, separated by a **horizontal divider line**.
+   - Example formatting:
+     ```
+     [Question]
+
+     ┌──────────────────────────────┐
+     │ (A) Option one               │
+     ├──────────────────────────────┤
+     │ (B) Option two               │
+     ├──────────────────────────────┤
+     │ (C) Option three             │
+     ├──────────────────────────────┤
+     │ (D) Option four              │
+     └──────────────────────────────┘
+     ```
+   - Keep the text inside each option short, simple, and aligned properly.
+
+3. **Media Placeholders**
    - If rules mention “add visuals” or “use images,” insert `[Insert Image: ...]`
      after the relevant question or section to help comprehension.
    - If rules mention “add audio,” insert `[Insert Audio: ...]`
      where reading or listening support would help the student understand better.
    - Keep placeholders minimal and relevant.
 
-3. **Do NOT:**
+4. **Do NOT:**
    - Summarize or remove any exercise.
    - Add Engager/I Do/We Do/You Do structure.
    - Introduce new unrelated questions.
 
-4. **Tone**
+5. **Tone**
    - Use a friendly, teacher-like tone that guides the student through the worksheet.
    - Use plain, encouraging English with occasional bilingual scaffolding if required.
 
@@ -143,7 +162,7 @@ without changing its basic structure.
 \"\"\"{text}\"\"\"
 
 Now produce the adapted worksheet following all the student profile rules.
-Ensure that placeholders are included only if demanded by the rules.
+Ensure that placeholders and formatting enhancements are included **only if demanded by the rules**.
 """
 
     try:
