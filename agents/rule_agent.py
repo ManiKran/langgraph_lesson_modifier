@@ -40,16 +40,25 @@ import time
 def filter_rules_with_llm(rules: List[str]) -> List[str]:
 
     prompt = f"""
-You are a rule optimization assistant for lesson planning.
-Here is a list of adaptation rules extracted based on a student's profile:
+You are an expert lesson adaptation rule optimizer.
+
+Below is a list of adaptation rules derived from a student's profile:
 
 {rules}
 
-Your task:
-- Remove duplicate or nearly identical rules.
-- If there is a direct conflict (e.g. 'include visuals' and 'don't include visuals'), remove all the conflicting rules.
-- Ensure the final list contains only meaningful, non-conflicting rules.
-- Return only a valid Python list of strings.
+Your goal:
+- Keep **only those rules** that would *actively influence or change* the wording, structure, tone, media, or accessibility of the lesson when it is modified.
+- Remove rules that are administrative, descriptive, redundant, or do not directly affect lesson generation (e.g., "Student enjoys music" without instructional implication).
+- Remove duplicates or semantically identical rules.
+- If two rules clearly contradict each other (e.g., "avoid visuals" vs. "add visuals"), remove both.
+- Keep rules that guide how the content should be presented, such as:
+  - Language or translation preferences
+  - Use of visuals, audio, scaffolds, or simplifications
+  - Instructional strategies, pacing, and tone
+  - Accessibility or differentiation methods
+- Ensure the final result is concise, relevant, and non-conflicting.
+
+Return only the optimized list in valid Python list format (e.g. ["rule1", "rule2", "rule3"]) with no explanation.
 
 Optimized Rule List:
 """
