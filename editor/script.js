@@ -132,3 +132,39 @@ document.addEventListener("DOMContentLoaded", () => {
     range.insertNode(frag);
   }
 });
+
+// 🔹 Double-click image to edit or replace
+container.addEventListener("dblclick", (e) => {
+  if (e.target.tagName === "IMG") {
+    const currentImg = e.target;
+    const currentAlt = currentImg.alt || "";
+    const currentSrc = currentImg.src;
+
+    const newAlt = prompt("Edit alt text:", currentAlt);
+    if (newAlt === null) return; // Cancelled
+    currentImg.alt = newAlt;
+
+    const replace = confirm("Do you want to replace this image?");
+    if (replace) {
+      const newUrl = prompt("Enter new image URL:", currentSrc);
+      if (newUrl && newUrl !== currentSrc) {
+        currentImg.src = newUrl;
+      }
+    }
+  }
+});
+
+// 🔹 Double-click audio to replace source
+container.addEventListener("dblclick", (e) => {
+  if (e.target.tagName === "AUDIO" || e.target.closest("audio")) {
+    const audioElem = e.target.tagName === "AUDIO" ? e.target : e.target.closest("audio");
+    const sourceElem = audioElem.querySelector("source");
+    const currentSrc = sourceElem?.src || "";
+
+    const newSrc = prompt("Enter new audio file URL:", currentSrc);
+    if (newSrc && newSrc !== currentSrc) {
+      sourceElem.src = newSrc;
+      audioElem.load(); // Reload with new source
+    }
+  }
+});

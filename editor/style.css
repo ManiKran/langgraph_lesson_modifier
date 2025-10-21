@@ -1,14 +1,16 @@
+/* Light Mode Setup */
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;   /* White background */
+  color: #000;              /* Black text */
 }
 
 #editor-toolbar {
-  background: #111;
+  background: #f0f0f0;
+  color: #000;
   padding: 15px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #ccc;
   text-align: center;
 }
 
@@ -20,30 +22,47 @@ body {
   height: calc(100vh - 70px);
 }
 
+#lesson-container img:hover {
+  outline: 2px dashed #888;
+  outline-offset: 4px;
+  cursor: nwse-resize;
+}
+
+#lesson-container audio {
+  width: 300px;  /* or 100% for responsiveness */
+  margin: 10px 0;
+  cursor: pointer;
+}
+
 /* Headings */
 #lesson-container h2 {
-  color: #f2f2f2;
+  color: #222;
   font-size: 24px;
   margin: 25px 0 10px;
 }
 
 #lesson-container h3 {
-  color: #dcdcdc;
+  color: #333;
   font-size: 20px;
   margin: 20px 0 8px;
 }
 
-/* Images and Audio */
+/* Images */
 #lesson-container img {
   display: block;
   max-width: 100%;
+  height: auto;
   margin: 10px 0;
   border-radius: 8px;
   cursor: pointer;
+  resize: both;
+  overflow: auto;
 }
 
+/* Audio - fixed width */
 #lesson-container audio {
-  width: 100%;
+  width: 300px;
+  max-width: 100%;
   margin: 10px 0;
   cursor: pointer;
 }
@@ -51,22 +70,23 @@ body {
 /* Context Menu */
 #context-menu {
   position: absolute;
-  background: #111;
-  border: 1px solid #444;
+  background: #fff;
+  border: 1px solid #ccc;
   display: none;
   z-index: 1000;
   border-radius: 6px;
   min-width: 150px;
+  color: #000;
 }
 
 #context-menu div {
   padding: 10px;
   cursor: pointer;
-  color: #ddd;
+  color: #000;
 }
 
 #context-menu div:hover {
-  background: #333;
+  background: #eee;
 }
 
 /* Side Panel */
@@ -76,9 +96,9 @@ body {
   top: 0;
   height: 100vh;
   width: 400px;
-  background: #111;
-  color: #fff;
-  border-left: 2px solid #444;
+  background: #f9f9f9;
+  color: #000;
+  border-left: 2px solid #ccc;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -94,7 +114,7 @@ body {
 }
 
 #close-panel {
-  background: red;
+  background: #d33;
   color: white;
   border: none;
   padding: 4px 8px;
