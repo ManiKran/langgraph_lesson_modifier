@@ -10,39 +10,48 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 def modify_lesson_content(text: str, rules: List[str]) -> str:
     """
     Uses GPT-4o to apply lesson adaptation rules to the input lesson content.
-    Returns modified lesson content with placeholders for visuals and audio.
+    Returns a modified lesson in the structure: Engager, I Do, We Do, You Do.
+    Only inserts placeholders if the rules require it.
     """
     prompt = f"""
-You are an inclusive education assistant helping to adapt lesson plans for students with special learning needs.
+You are an expert inclusive education assistant helping teachers adapt lesson plans for diverse learners.
 
-Below are the adaptation rules to be applied. Use them to guide your modifications, but do NOT repeat or list these rules in the output.
+Your task is to rewrite the lesson using the adaptation rules below. Do not copy these rules into the output.
 
-Adaptation Rules:
+== Adaptation Rules ==
 {chr(10).join(f"- {rule}" for rule in rules)}
 
-Now, based on these rules, modify the following lesson content.
+== Structure the modified lesson into four clearly labeled sections ==
 
-Instructions:
-- modify the content based on the rules provided.
-- Apply all the rules that are mentioned.
-- Add [Insert Image: short description] where a visual would help understanding.
-- Add [Insert Audio: sentence to narrate] where an audio explanation or read-aloud would benefit the learner.
-- Do NOT include actual image or audio content. Only use these placeholders.
-- Ensure structure and flow of the lesson remain intact.
+1. **Engager**: A warm-up to spark curiosity. Could be a question, relatable prompt, or quick writing exercise.
+2. **I Do**: The teacher explains the key concepts, vocabulary, or skills. Modify this based on the adaptation rules. Use images or audio *only if required by the rules*.
+3. **We Do**: A collaborative activity between teacher and student. Can be a game, shared discussion, or practice task. Adapt as needed for the student.
+4. **You Do**: An independent task or mini project the student does alone. Make it achievable and reflective of the skills taught.
 
-Original Lesson:
+== Placeholder Rules ==
+- Only use placeholders if required by the adaptation rules.
+- Use `[Insert Image: short description]` for important visuals that enhance understanding.
+- Use `[Insert Audio: sentence to narrate]` for audio narration or instructions where necessary.
+- Do NOT include actual media—just the placeholders.
+
+== Guidelines ==
+- DO NOT repeat or list the rules in your output.
+- Personalize the content to meet the student’s needs based on the rules.
+- Maintain structure and clarity.
+
+Original Lesson Content:
 \"\"\"
 {text}
 \"\"\"
 
-Modified Lesson:
+Now generate the modified lesson with the four sections clearly labeled.
 """
 
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that adapts educational lessons for accessibility and inclusion."},
+                {"role": "system", "content": "You are a helpful assistant that rewrites lesson plans for accessibility using Engager–I Do–We Do–You Do format."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.4,
