@@ -29,19 +29,19 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
    Start with a warm‑up or connection activity that emotionally or intellectually prepares the learner.
 
 2. **I Do**  
-   The teacher explains the concept, vocabulary, and key ideas of the lesson.  
-   - Summarize the core narrative or concept in simple English.  
-   - Define difficult vocabulary words.  
-   - **If any rule mentions side‑by‑side translation or dominant language**, then for every complex word or phrase, include a short translation in parentheses in that language.  
-     Example (for Hindi):  
-     *The word “ingenious” (चतुर / clever) means very smart or inventive.*  
-   - Insert `[Insert Image: ...]` or `[Insert Audio: ...]` *only if the rules require visual/audio support.*
+   The teacher explains the story in simple, engaging language.  
+   - Retell the ENTIRE story step-by-step in a way that students will understand and connect with.  
+   - Pause and explain important events (e.g., why Daedalus warns Icarus).  
+   - For any complex vocabulary, **embed the Hindi translation in parentheses** after the English word.  
+   - Use `[Insert Image: ...]` and `[Insert Audio: ...]` *only when the rules mention them and they help explain a part of the story.*  
+   - The tone should feel like a teacher guiding students through a story — not just listing facts.  
+   - Keep the student’s attention and include emotional reflections (“How do you think Icarus felt?”).
 
-3. **We Do**  
+3. **We Do**  
    Create an interactive, teacher‑student practice activity (discussion, game, or roleplay).  
    Use the student’s dominant language for scaffolding if rules mention bilingual learning.
 
-4. **You Do**  
+4. **You Do**  
    Design an independent activity that allows the student to demonstrate understanding.  
    Include flexible output choices (oral, written, visual) based on rules.
 
