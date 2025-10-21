@@ -1,3 +1,4 @@
+// ✅ UPDATED script.js (Fixed-Size Media Inserts)
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("lesson-container");
   const contextMenu = document.getElementById("context-menu");
@@ -7,25 +8,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let contextX = 0;
   let contextY = 0;
 
-  /* -------------------------------------
-     🔹 Load lesson file dynamically (?file=filename.md)
-  -------------------------------------- */
   const params = new URLSearchParams(window.location.search);
   const file = params.get("file");
   if (file) {
     fetch(`/markdown/${file}`)
       .then(res => res.text())
       .then(data => {
-        container.innerHTML = marked.parse(data); // ✅ Convert Markdown → HTML
+        container.innerHTML = marked.parse(data);
       })
       .catch(err => {
         container.innerText = "Error loading file: " + err.message;
       });
   }
 
-  /* -------------------------------------
-     🔹 Right-click context menu
-  -------------------------------------- */
   container.addEventListener("contextmenu", (e) => {
     e.preventDefault();
     contextX = e.pageX;
@@ -35,14 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
     contextMenu.style.display = "block";
   });
 
-  // Hide menu when clicking anywhere else
   document.addEventListener("click", () => {
     contextMenu.style.display = "none";
   });
 
-  /* -------------------------------------
-     🔹 Insert Image
-  -------------------------------------- */
   document.getElementById("insert-image").addEventListener("click", () => {
     openPanel(
       "Insert Image",
@@ -55,9 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     contextMenu.style.display = "none";
   });
 
-  /* -------------------------------------
-     🔹 Insert Audio
-  -------------------------------------- */
   document.getElementById("insert-audio").addEventListener("click", () => {
     openPanel(
       "Insert Audio",
@@ -69,9 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     contextMenu.style.display = "none";
   });
 
-  /* -------------------------------------
-     🔹 Side Panel Control
-  -------------------------------------- */
   document.getElementById("close-panel").addEventListener("click", () => {
     sidePanel.style.right = "-400px";
   });
@@ -82,9 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sidePanel.style.right = "0px";
   };
 
-  /* -------------------------------------
-     🔹 Search Images (calls backend /api/search_images)
-  -------------------------------------- */
   window.searchImage = function () {
     const q = document.getElementById("image-search").value.trim();
     if (!q) return;
@@ -107,11 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
           img.style.margin = "5px 0";
           img.style.cursor = "pointer";
           img.onclick = () => {
-            insertAtCursor(`
-              <div class="resizable-wrapper" contenteditable="false">
-                <img src="${url}" alt="Lesson Image">
-              </div>
-            `);
+            insertAtCursor(`<img src="${url}" alt="Lesson Image" class="fixed-media">`);
             sidePanel.style.right = "-400px";
           };
           resultsDiv.appendChild(img);
@@ -122,9 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  /* -------------------------------------
-     🔹 Generate Audio (calls backend /api/generate_audio)
-  -------------------------------------- */
   window.generateAudio = function () {
     const text = document.getElementById("audio-text").value.trim();
     if (!text) return;
@@ -137,11 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(res => res.json())
       .then(data => {
         const audioHTML = `
-          <div class="resizable-wrapper" contenteditable="false">
-            <audio controls>
-              <source src="${data.audio_url}" type="audio/mpeg">
-            </audio>
-          </div>
+          <audio controls class="fixed-media">
+            <source src="${data.audio_url}" type="audio/mpeg">
+          </audio>
         `;
         insertAtCursor(audioHTML);
         sidePanel.style.right = "-400px";
@@ -151,15 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  /* -------------------------------------
-     🔹 Helper: Insert HTML at clicked position
-  -------------------------------------- */
   function insertAtCursor(html) {
-  const range = document.caretRangeFromPoint
-  ? document.caretRangeFromPoint(contextX, contextY)
-  : document.caretPositionFromPoint?.(contextX, contextY)?.getRange();
-  if (!range) return;
-  const frag = range.createContextualFragment(html);
-  range.insertNode(frag);
-}
-}); 
+    const range = document.caretRangeFromPoint
+      ? document.caretRangeFromPoint(contextX, contextY)
+      : document.caretPositionFromPoint?.(contextX, contextY)?.getRange();
+    if (!range) return;
+    const frag = range.createContextualFragment(html);
+    range.insertNode(frag);
+  }
+});

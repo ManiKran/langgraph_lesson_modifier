@@ -4,8 +4,8 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background-color: #fff;  /* White background */
-  color: #000;             /* Black text */
+  background-color: #fff;
+  color: #000;
 }
 
 /* -------------------------------
@@ -51,80 +51,42 @@ body {
 }
 
 /* -------------------------------
-   🖼️ Images (default behavior)
+   🖼️ Image Styling (Fixed size, no margin)
 ---------------------------------- */
 #lesson-container img {
-  display: block;
-  max-width: 100%;
+  width: 300px;
   height: auto;
-  margin: 10px 0;
+  display: block;
   border-radius: 8px;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
   transition: outline 0.2s ease-in-out;
 }
 
-/* Hover hint */
 #lesson-container img:hover {
   outline: 2px dashed #aaa;
   outline-offset: 4px;
-  cursor: nwse-resize;
 }
 
 /* -------------------------------
-   🎧 Audio Elements
+   🎧 Audio Styling (Fixed width, no margin)
 ---------------------------------- */
 #lesson-container audio {
   width: 300px;
-  max-width: 100%;
-  margin: 10px 0;
-  cursor: pointer;
   display: block;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
 }
 
-/* Hover hint */
 #lesson-container audio:hover {
   outline: 2px dashed #aaa;
   outline-offset: 4px;
-  cursor: ew-resize;
 }
 
 /* -------------------------------
-   📦 Resizable Wrapper (NEW)
-   Used for wrapping images/audio
----------------------------------- */
-.resizable-wrapper {
-  resize: both;
-  overflow: auto;
-  display: inline-block;
-  border: 2px dashed #888;
-  padding: 0;
-  margin: 0;           /* ← Remove margin */
-  box-sizing: border-box;
-  max-width: 100%;
-}
-
-.resizable-wrapper img,
-.resizable-wrapper audio {
-  display: block;
-  width: 100%;         /* Full width inside resizable container */
-  height: auto;
-  margin: 0;           /* ← Remove default margin */
-  padding: 0;
-  border: none;
-}
-
-.resizable-wrapper:hover {
-  border-color: #555;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-}
-
-/* Hide scrollbar when resizing */
-.resizable-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
-/* -------------------------------
-   🧭 Context Menu
+   📋 Context Menu
 ---------------------------------- */
 #context-menu {
   position: absolute;
@@ -135,7 +97,7 @@ body {
   border-radius: 6px;
   min-width: 150px;
   color: #000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #context-menu div {
@@ -195,7 +157,7 @@ body {
 }
 
 #panel-content img {
-  max-width: 100%;
+  width: 100%;
   margin-bottom: 10px;
   cursor: pointer;
   border-radius: 6px;
