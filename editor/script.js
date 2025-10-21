@@ -9,6 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let contextY = 0;
 
   const params = new URLSearchParams(window.location.search);
+  const isReadOnly = params.get("readonly") === "true";
+
+  if (isReadOnly) {
+    const lessonContainer = document.getElementById("lesson-container");
+    lessonContainer.removeAttribute("contenteditable");
+  }
   const file = params.get("file");
   if (file) {
     fetch(`/markdown/${file}`)
