@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, HttpUrl
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 from bs4 import BeautifulSoup
 import html2text
 import os
@@ -33,6 +33,8 @@ app.add_middleware(
 class FullPipelineRequest(BaseModel):
     student_profile: Dict[str, Union[str, List[str]]]
     lesson_url: HttpUrl
+    file_category: Optional[str] = "Lesson"        # e.g., "Lesson" or "Worksheet"
+    number_of_days: Optional[int] = 1    
 
 class ShortPipelineRequest(BaseModel):
     rules: List[str]
@@ -64,7 +66,7 @@ async def full_pipeline(request: FullPipelineRequest):
         result = lesson_placeholders_app.invoke({
             "student_profile": request.student_profile,
             "lesson_url": str(request.lesson_url),
-            "number_of_days": request.number_of_days,                 # 🆕 Passed to your graph/pipeline
+            "number_of_days": request.number_of_days,              
             "file_category": str(request.file_category)
         })
 
