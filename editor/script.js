@@ -7,21 +7,25 @@ document.addEventListener("DOMContentLoaded", () => {
   let contextX = 0;
   let contextY = 0;
 
-  // 🔹 Load lesson file dynamically (?file=filename.md)
+  /* -------------------------------------
+     🔹 Load lesson file dynamically (?file=filename.md)
+  -------------------------------------- */
   const params = new URLSearchParams(window.location.search);
   const file = params.get("file");
   if (file) {
     fetch(`/markdown/${file}`)
       .then(res => res.text())
       .then(data => {
-        container.innerHTML = marked.parse(data); // ✅ Convert Markdown to HTML
+        container.innerHTML = marked.parse(data); // ✅ Convert Markdown → HTML
       })
       .catch(err => {
         container.innerText = "Error loading file: " + err.message;
       });
   }
 
-  // 🔹 Right-click context menu
+  /* -------------------------------------
+     🔹 Right-click context menu
+  -------------------------------------- */
   container.addEventListener("contextmenu", (e) => {
     e.preventDefault();
     contextX = e.pageX;
@@ -31,37 +35,43 @@ document.addEventListener("DOMContentLoaded", () => {
     contextMenu.style.display = "block";
   });
 
-  // Hide context menu on click
+  // Hide menu when clicking anywhere else
   document.addEventListener("click", () => {
     contextMenu.style.display = "none";
   });
 
-  // 🔹 Insert Image
+  /* -------------------------------------
+     🔹 Insert Image
+  -------------------------------------- */
   document.getElementById("insert-image").addEventListener("click", () => {
     openPanel(
       "Insert Image",
       `
       <input type="text" id="image-search" placeholder="Search images..." style="width:100%; margin-bottom:10px;">
       <button onclick="searchImage()">Search</button>
-      <div id="image-results"></div>
-    `
+      <div id="image-results" style="margin-top:10px;"></div>
+      `
     );
     contextMenu.style.display = "none";
   });
 
-  // 🔹 Insert Audio
+  /* -------------------------------------
+     🔹 Insert Audio
+  -------------------------------------- */
   document.getElementById("insert-audio").addEventListener("click", () => {
     openPanel(
       "Insert Audio",
       `
       <textarea id="audio-text" rows="3" style="width:100%; margin-bottom:10px;" placeholder="Enter text for audio..."></textarea>
       <button onclick="generateAudio()">Generate Audio</button>
-    `
+      `
     );
     contextMenu.style.display = "none";
   });
 
-  // 🔹 Side Panel Functions
+  /* -------------------------------------
+     🔹 Side Panel Control
+  -------------------------------------- */
   document.getElementById("close-panel").addEventListener("click", () => {
     sidePanel.style.right = "-400px";
   });
@@ -72,7 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
     sidePanel.style.right = "0px";
   };
 
-  // 🔹 Search Image Function
+  /* -------------------------------------
+     🔹 Search Images (calls backend /api/search_images)
+  -------------------------------------- */
   window.searchImage = function () {
     const q = document.getElementById("image-search").value.trim();
     if (!q) return;
@@ -83,28 +95,36 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(res => res.json())
       .then(images => {
         resultsDiv.innerHTML = "";
-        if (!Array.isArray(images)) {
+        if (!Array.isArray(images) || images.length === 0) {
           resultsDiv.innerHTML = "<p>No images found.</p>";
           return;
         }
+
         images.forEach(url => {
           const img = document.createElement("img");
           img.src = url;
+          img.style.width = "100%";
+          img.style.margin = "5px 0";
           img.style.cursor = "pointer";
-          img.style.margin = "5px";
           img.onclick = () => {
-            insertAtCursor(`<img src="${url}" alt="Lesson Image" style="resize: both; overflow: auto; display: block;">`);
+            insertAtCursor(`
+              <div class="resizable-wrapper" contenteditable="false">
+                <img src="${url}" alt="Lesson Image">
+              </div>
+            `);
             sidePanel.style.right = "-400px";
           };
           resultsDiv.appendChild(img);
         });
       })
       .catch(() => {
-        resultsDiv.innerHTML = "<p style='color:red;'>Error fetching images</p>";
+        resultsDiv.innerHTML = "<p style='color:red;'>Error fetching images.</p>";
       });
   };
 
-  // 🔹 Generate Audio Function
+  /* -------------------------------------
+     🔹 Generate Audio (calls backend /api/generate_audio)
+  -------------------------------------- */
   window.generateAudio = function () {
     const text = document.getElementById("audio-text").value.trim();
     if (!text) return;
@@ -117,9 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(res => res.json())
       .then(data => {
         const audioHTML = `
-          <audio controls style="resize: both; overflow: auto; display: block;">
-            <source src="${data.audio_url}" type="audio/mpeg">
-          </audio>
+          <div class="resizable-wrapper" contenteditable="false">
+            <audio controls>
+              <source src="${data.audio_url}" type="audio/mpeg">
+            </audio>
+          </div>
         `;
         insertAtCursor(audioHTML);
         sidePanel.style.right = "-400px";
@@ -129,7 +151,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // 🔹 Insert HTML at clicked position
+  /* -------------------------------------
+     🔹 Helper: Insert HTML at clicked position
+  -------------------------------------- */
   function insertAtCursor(html) {
     const range = document.caretRangeFromPoint(contextX, contextY);
     if (!range) return;
@@ -137,17 +161,16 @@ document.addEventListener("DOMContentLoaded", () => {
     range.insertNode(frag);
   }
 
-  // 🔹 Double-click image or audio to enable resizing
+  /* -------------------------------------
+     🔹 Double-click to toggle resize mode
+  -------------------------------------- */
   container.addEventListener("dblclick", (e) => {
-    if (e.target.tagName === "IMG" || e.target.tagName === "AUDIO") {
-      const elem = e.target;
-
-      // Make it resizable and visible as such
-      elem.style.resize = "both";
-      elem.style.overflow = "auto";
-      elem.style.outline = "2px dashed #888";
-      elem.style.outlineOffset = "3px";
-      elem.style.display = "inline-block";
+    const wrapper = e.target.closest(".resizable-wrapper");
+    if (wrapper) {
+      const currentlyResizable = wrapper.classList.toggle("active-resize");
+      wrapper.style.border = currentlyResizable ? "2px dashed #444" : "2px dashed #888";
+      wrapper.style.resize = currentlyResizable ? "both" : "none";
+      wrapper.style.overflow = currentlyResizable ? "auto" : "hidden";
     }
   });
 });

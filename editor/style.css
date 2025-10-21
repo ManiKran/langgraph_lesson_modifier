@@ -1,50 +1,47 @@
-/* Light Mode Setup */
+/* -------------------------------
+   🌞 Light Mode Setup
+---------------------------------- */
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background-color: #fff;   /* White background */
-  color: #000;              /* Black text */
+  background-color: #fff;  /* White background */
+  color: #000;             /* Black text */
 }
 
+/* -------------------------------
+   🧭 Toolbar
+---------------------------------- */
 #editor-toolbar {
   background: #f0f0f0;
   color: #000;
   padding: 15px;
   border-bottom: 1px solid #ccc;
   text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
+/* -------------------------------
+   📄 Lesson Content Area
+---------------------------------- */
 #lesson-container {
   padding: 20px;
   font-size: 18px;
   line-height: 1.6;
   overflow-y: auto;
   height: calc(100vh - 70px);
+  background: #fff;
 }
 
-/* ✅ NEW: Make image/audio visibly resizable when double-clicked */
-#lesson-container img.resizable,
-#lesson-container audio.resizable {
-  resize: both;
-  overflow: auto;
-  outline: 2px dashed #888;
-  outline-offset: 4px;
-  display: inline-block;
-}
-
-/* ✅ Optional: Add hover effect to hint at resizability */
-#lesson-container img:hover,
-#lesson-container audio:hover {
-  outline: 2px dashed #aaa;
-  outline-offset: 4px;
-  cursor: nwse-resize;
-}
-
-/* Headings */
+/* -------------------------------
+   ✏️ Headings
+---------------------------------- */
 #lesson-container h2 {
   color: #222;
   font-size: 24px;
   margin: 25px 0 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
 }
 
 #lesson-container h3 {
@@ -53,7 +50,9 @@ body {
   margin: 20px 0 8px;
 }
 
-/* Images */
+/* -------------------------------
+   🖼️ Images (default behavior)
+---------------------------------- */
 #lesson-container img {
   display: block;
   max-width: 100%;
@@ -61,19 +60,64 @@ body {
   margin: 10px 0;
   border-radius: 8px;
   cursor: pointer;
-  resize: both;
-  overflow: auto;
+  transition: outline 0.2s ease-in-out;
 }
 
-/* Audio - fixed width */
+/* Hover hint */
+#lesson-container img:hover {
+  outline: 2px dashed #aaa;
+  outline-offset: 4px;
+  cursor: nwse-resize;
+}
+
+/* -------------------------------
+   🎧 Audio Elements
+---------------------------------- */
 #lesson-container audio {
   width: 300px;
   max-width: 100%;
   margin: 10px 0;
   cursor: pointer;
+  display: block;
 }
 
-/* Context Menu */
+/* Hover hint */
+#lesson-container audio:hover {
+  outline: 2px dashed #aaa;
+  outline-offset: 4px;
+  cursor: ew-resize;
+}
+
+/* -------------------------------
+   📦 Resizable Wrapper (NEW)
+   Used for wrapping images/audio
+---------------------------------- */
+.resizable-wrapper {
+  display: inline-block;
+  resize: both;
+  overflow: auto;
+  border: 2px dashed #888;
+  padding: 5px;
+  margin: 10px 0;
+  border-radius: 6px;
+  background: #fefefe;
+  max-width: 100%;
+  transition: border 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.resizable-wrapper:hover {
+  border-color: #555;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* Hide scrollbar when resizing */
+.resizable-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* -------------------------------
+   🧭 Context Menu
+---------------------------------- */
 #context-menu {
   position: absolute;
   background: #fff;
@@ -83,19 +127,23 @@ body {
   border-radius: 6px;
   min-width: 150px;
   color: #000;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 #context-menu div {
   padding: 10px;
   cursor: pointer;
   color: #000;
+  transition: background 0.2s;
 }
 
 #context-menu div:hover {
   background: #eee;
 }
 
-/* Side Panel */
+/* -------------------------------
+   🧩 Side Panel
+---------------------------------- */
 #side-panel {
   position: fixed;
   right: -400px;
@@ -126,6 +174,11 @@ body {
   padding: 4px 8px;
   font-size: 18px;
   cursor: pointer;
+  border-radius: 4px;
+}
+
+#close-panel:hover {
+  background: #b22;
 }
 
 #panel-content {
@@ -138,4 +191,9 @@ body {
   margin-bottom: 10px;
   cursor: pointer;
   border-radius: 6px;
+  transition: transform 0.2s;
+}
+
+#panel-content img:hover {
+  transform: scale(1.03);
 }

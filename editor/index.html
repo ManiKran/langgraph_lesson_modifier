@@ -5,36 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lesson Editor</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- ✅ Markdown Parser -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+  <!-- Toolbar -->
   <div id="editor-toolbar">
     <h2>Lesson Editor</h2>
   </div>
 
-  <!-- Editable Lesson Area -->
+  <!-- Editable Lesson Content -->
   <div id="lesson-container" contenteditable="true" spellcheck="false">
     Loading lesson...
   </div>
 
-  <!-- Context Menu -->
+  <!-- Right-Click Context Menu -->
   <div id="context-menu">
     <div id="insert-image">Insert Image</div>
     <div id="insert-audio">Insert Audio</div>
   </div>
 
-  <!-- Side Panel -->
+  <!-- Slide-In Side Panel -->
   <div id="side-panel">
     <div id="panel-header">
       <span id="panel-title">Media Tools</span>
       <button id="close-panel">×</button>
     </div>
     <div id="panel-content">
-      <!-- Dynamic content -->
+      <!-- Dynamically filled -->
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
