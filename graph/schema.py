@@ -18,7 +18,7 @@ class State(BaseModel):
     image_paths: Optional[List[str]] = None
 
     file_category: Optional[str] = "Lesson"   # e.g., "Lesson" or "Worksheet"
-    num_days: Optional[int] = 1 
+    number_of_days: Optional[int] = 1 
 
     final_output_path: Optional[str] = None   # path to final .txt file
     final_output_json: Optional[str] = None  # path to final .json file for structured display
