@@ -155,22 +155,11 @@ document.addEventListener("DOMContentLoaded", () => {
      🔹 Helper: Insert HTML at clicked position
   -------------------------------------- */
   function insertAtCursor(html) {
-    const range = document.caretRangeFromPoint(contextX, contextY);
-    if (!range) return;
-    const frag = range.createContextualFragment(html);
-    range.insertNode(frag);
-  }
-
-  /* -------------------------------------
-     🔹 Double-click to toggle resize mode
-  -------------------------------------- */
-  container.addEventListener("dblclick", (e) => {
-    const wrapper = e.target.closest(".resizable-wrapper");
-    if (wrapper) {
-      const currentlyResizable = wrapper.classList.toggle("active-resize");
-      wrapper.style.border = currentlyResizable ? "2px dashed #444" : "2px dashed #888";
-      wrapper.style.resize = currentlyResizable ? "both" : "none";
-      wrapper.style.overflow = currentlyResizable ? "auto" : "hidden";
-    }
-  });
-});
+  const range = document.caretRangeFromPoint
+  ? document.caretRangeFromPoint(contextX, contextY)
+  : document.caretPositionFromPoint?.(contextX, contextY)?.getRange();
+  if (!range) return;
+  const frag = range.createContextualFragment(html);
+  range.insertNode(frag);
+}
+}); 

@@ -93,16 +93,24 @@ body {
    Used for wrapping images/audio
 ---------------------------------- */
 .resizable-wrapper {
-  display: inline-block;
   resize: both;
   overflow: auto;
+  display: inline-block;
   border: 2px dashed #888;
-  padding: 5px;
-  margin: 10px 0;
-  border-radius: 6px;
-  background: #fefefe;
+  padding: 0;
+  margin: 0;           /* ← Remove margin */
+  box-sizing: border-box;
   max-width: 100%;
-  transition: border 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.resizable-wrapper img,
+.resizable-wrapper audio {
+  display: block;
+  width: 100%;         /* Full width inside resizable container */
+  height: auto;
+  margin: 0;           /* ← Remove default margin */
+  padding: 0;
+  border: none;
 }
 
 .resizable-wrapper:hover {
