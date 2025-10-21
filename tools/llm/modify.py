@@ -26,36 +26,41 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
 == SECTION GUIDELINES ==
 
 1. **Engager**  
-   Start with a warm‑up or connection activity that emotionally or intellectually prepares the learner.
+   Start with a warm‑up or connection activity that emotionally or intellectually prepares the learner.  
+   Ask simple reflection questions, or connect the story theme to their life.
 
 2. **I Do**  
-   The teacher explains the story in simple, engaging language.  
-   - Retell the ENTIRE story step-by-step in a way that students will understand and connect with.  
-   - Pause and explain important events (e.g., why Daedalus warns Icarus).  
-   - For any complex vocabulary, **embed the Hindi translation in parentheses** after the English word.  
-   - Use `[Insert Image: ...]` and `[Insert Audio: ...]` *only when the rules mention them and they help explain a part of the story.*  
-   - The tone should feel like a teacher guiding students through a story — not just listing facts.  
-   - Keep the student’s attention and include emotional reflections (“How do you think Icarus felt?”).
+   This section should feel like a teacher reading and guiding the story to students step-by-step.  
+   🔸 **DO NOT summarize**. You must **retell the entire story in full detail**, not in brief.  
+   🔸 Use simple, engaging English with embedded emotions, pauses, and reactions.  
+   🔸 At key moments, ask questions like “What do you think Daedalus felt here?”  
+   🔸 For **hard vocabulary**, embed Dominant Language translations in parentheses.  
+   🔸 If the rules require **bilingual scaffolding**, also add Dominant Language translations for whole sentences where the English may be too complex.  
+   🔸 Use `[Insert Image: ...]` and `[Insert Audio: ...]` only if the rule demands media.  
+   🔸 Do not skip any key detail from the original lesson — treat it as a full retelling, not an outline.  
+   🔸 Think of it as storytelling for a multilingual classroom, not as summarization.
 
 3. **We Do**  
-   Create an interactive, teacher‑student practice activity (discussion, game, or roleplay).  
-   Use the student’s dominant language for scaffolding if rules mention bilingual learning.
+   Create a teacher-guided collaborative activity.  
+   🔸 Use dominant language for support if required by rules.  
+   🔸 Ask comprehension or prediction questions, or design a role-play or discussion.
 
 4. **You Do**  
-   Design an independent activity that allows the student to demonstrate understanding.  
-   Include flexible output choices (oral, written, visual) based on rules.
+   Design an independent task that lets the student show understanding.  
+   🔸 Include options for writing, drawing, speaking — support multiple learning styles.  
+   🔸 Allow students to use both English and their language if rules suggest bilingualism.
 
 == GENERAL REQUIREMENTS ==
-- Maintain logical flow and coherence.
-- Use simple, clear English adapted to the learner’s level.
-- Only insert media placeholders where the rules demand them.
-- Keep translations concise and in parentheses next to difficult words.
-- Do not include the list of rules in the output.
+- Do not include the rules in the output.
+- Maintain clear structure: Engager → I Do → We Do → You Do.
+- Use simple but expressive language.
+- Insert visuals or audio only where specifically needed by rules.
+- Avoid summarizing — this must feel like a teacher leading a full story reading session.
 
 == LESSON INPUT ==
 \"\"\"{text}\"\"\"
 
-Now produce the modified lesson.
+Now produce the fully modified lesson based on the student profile rules.
 """
 
     try:
