@@ -39,6 +39,8 @@ class FullPipelineRequest(BaseModel):
 class ShortPipelineRequest(BaseModel):
     rules: List[str]
     lesson_url: HttpUrl
+    file_category: Optional[str] = "Lesson"        # e.g., "Lesson" or "Worksheet"
+    number_of_days: Optional[int] = 1   
 
 class ModifyLessonRequest(BaseModel):
     rules: List[str]
@@ -100,7 +102,9 @@ async def generate_lesson_from_existing_rules(request: ShortPipelineRequest):
     try:
         result = lesson_from_rules_app.invoke({
             "rules": request.rules,
-            "lesson_url": str(request.lesson_url)
+            "lesson_url": str(request.lesson_url),
+            "number_of_days": request.number_of_days,              
+            "file_category": str(request.file_category)
         })
 
         md_file = os.path.basename(result["final_output_md"])
