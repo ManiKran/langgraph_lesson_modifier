@@ -56,11 +56,22 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
    🔸 Include options for writing, drawing, speaking — support multiple learning styles.  
    🔸 Allow students to use both English and their language if rules suggest bilingualism.
 
+5. **Assessment**  
+   Create 3 multiple-choice questions that assess the **main concept** or learning goal of the lesson — not just the retelling in “I Do”.  
+   🔸 Each question should check the student’s understanding of the key ideas or themes.  
+   🔸 Provide 3–4 answer options in a vertical list, with clear line breaks between them.  
+   🔸 Do **not** include the correct answer — the student must choose.  
+   🔸 If rules require bilingual support, include translated versions of each question and option (e.g., Hindi, Spanish) below the English.  
+   🔸 If audio is required, add `[Insert Audio: Question X]` after each question.  
+   🔸 Use student-friendly language and keep vocabulary consistent with the rest of the modified lesson.
+
 == GENERAL REQUIREMENTS ==
 - Do not include the rules in the output.
 - Maintain clear structure: Engager → I Do → We Do → You Do.
 - Use simple but expressive language.
 - Insert visuals or audio only where specifically needed by rules.
+- Maintain clear structure with H1 for title, H2 for sections, H3 for subheadings, and normal text elsewhere.
+- Keep the tone teacher-like, expressive, and friendly.
 - Avoid summarizing — this must feel like a teacher leading a full story reading session.
 
 == LESSON INPUT ==
