@@ -61,7 +61,7 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
    🔸 Each question should check the student’s understanding of the key ideas or themes.  
    🔸 Provide 3–4 answer options in a vertical list, with clear line breaks between them.  
    🔸 Do **not** include the correct answer — the student must choose.  
-   🔸 If rules require bilingual support, include translated versions of each question and option (e.g., Hindi, Spanish) below the English.  
+   🔸 include translated versions of each question and option IN THE Dominant Language(e.g., Hindi, Spanish) below the English.  
    🔸 If audio is required, add `[Insert Audio: Question X]` after each question.  
    🔸 Use student-friendly language and keep vocabulary consistent with the rest of the modified lesson.
 
