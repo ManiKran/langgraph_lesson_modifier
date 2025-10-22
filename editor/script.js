@@ -138,4 +138,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const frag = range.createContextualFragment(html);
     range.insertNode(frag);
   }
+
+  // === 🧲 Drag and Drop for Audio ===
+  container.addEventListener("dragstart", function (e) {
+    if (e.target.tagName === "AUDIO") {
+      draggedAudio = e.target;
+      draggedAudio.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+    }
+  });
+
+  container.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  });
+
+  container.addEventListener("drop", function (e) {
+    e.preventDefault();
+    if (draggedAudio) {
+      draggedAudio.classList.remove("dragging");
+      const range = document.caretRangeFromPoint
+        ? document.caretRangeFromPoint(e.clientX, e.clientY)
+        : document.caretPositionFromPoint?.(e.clientX, e.clientY)?.getRange();
+      if (range) {
+        range.insertNode(draggedAudio);
+      }
+      draggedAudio = null;
+    }
+  });
 });
