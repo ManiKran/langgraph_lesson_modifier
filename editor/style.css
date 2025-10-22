@@ -7,6 +7,9 @@
    🌞 Light Mode Setup
 ---------------------------------- */
 body {
+  max-width: 100%;
+  overflow-x: hidden;
+  word-wrap: break-word;
   margin: 0;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
@@ -34,6 +37,9 @@ body {
    📄 Lesson Content Area
 ---------------------------------- */
 #lesson-container {
+  overflow-x: hidden;
+  word-wrap: break-word;
+  white-space: normal;
   padding: 20px;
   font-size: 16pt;
   font-weight: 400;
