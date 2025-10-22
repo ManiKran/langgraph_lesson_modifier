@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(res => res.json())
       .then(data => {
         const audioHTML = `
-          <audio controls class="fixed-media">
+          <audio controls class="fixed-media" draggable="true">
             <source src="${data.audio_url}" type="audio/mpeg">
           </audio>
         `;
