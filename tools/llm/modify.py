@@ -135,11 +135,13 @@ Adapt the following worksheet into valid, clean **Markdown format** with clear h
     B) Option two  
     C) Option three  
     D) Option four
+    
+  - Use proper Dividers after each Question
 
-- For each **question and option**, if bilingual or audio support is required:
-  - Add **translated version** in parentheses directly below
-  - Then add audio placeholder like:
-    [Insert Audio: Question 1] or [Insert Audio: Option A]
+  - For each **question and option**,
+    - Add **translated version** in parentheses directly below in Dominant Language
+    - Then add audio placeholder like:
+      [Insert Audio: Question 1] or [Insert Audio: Option A]
 
 == CONTENT ADAPTATION RULES ==
 1. **Simplify & Translate**
