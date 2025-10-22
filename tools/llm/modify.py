@@ -122,58 +122,69 @@ and special‑needs students.
 {chr(10).join(f"- {rule}" for rule in rules)}
 
 == TASK ==
-You will rewrite the following worksheet according to these rules.
-Your job is to make the content **accessible, bilingual if needed, and engaging** — but
-without changing its basic structure.
+Rewrite the following worksheet strictly in **Markdown format** according to the rules below.
+Your goal is to make the worksheet **accessible, bilingual if required, and easy to follow**, while keeping
+its original structure and question flow.
 
-== GUIDELINES ==
+== OUTPUT FORMAT (Markdown Rules) ==
+- Use Markdown headings and text consistently:
+  - `##` → for main worksheet sections (e.g., Reading Comprehension, Vocabulary Practice)
+  - `###` → for each question number or instruction
+  - Regular text → for question content and answer options
+- For multiple-choice questions:
+  - Do **not** use boxes or ASCII drawings.
+  - Use standard **alphabetical notation** for options, formatted as:
+    ```
+    A) Option one  
+    B) Option two  
+    C) Option three  
+    D) Option four
+    ```
+- After each **question** and **each option**, if rules mention bilingual or audio support:
+  - Include the **translated version** of that question or option in the student's dominant language in parentheses.
+  - Then, add an **audio placeholder** below it like:
+    ```
+    [Insert Audio: Question 1]
+    ```
+  or
+    ```
+    [Insert Audio: Option A]
+    ```
 
+== CONTENT ADAPTATION RULES ==
 1. **Simplify and Support**
-   - Simplify complex words or grammar.
-   - If the student’s dominant language is mentioned in the rules (e.g., Hindi, Spanish, etc.),
-     include **translations in parentheses** beside hard vocabulary or complex phrases.
-   - Maintain question numbering, blanks, and formatting.
+   - Simplify complex words and grammar.
+   - When applicable, add translations (in parentheses) beside challenging vocabulary or full sentences.
+   - Maintain numbering, blanks, and structure.
 
-2. **Multiple Choice Formatting**
-   - If you encounter multiple-choice questions (MCQs), display the options **inside a box**.
-   - Each option should appear on its **own row**, separated by a **horizontal divider line**.
-   - Example formatting:
-     ```
-     [Question]
-
-     ┌──────────────────────────────┐
-     │ (A) Option one               │
-     ├──────────────────────────────┤
-     │ (B) Option two               │
-     ├──────────────────────────────┤
-     │ (C) Option three             │
-     ├──────────────────────────────┤
-     │ (D) Option four              │
-     └──────────────────────────────┘
-     ```
-   - Keep the text inside each option short, simple, and aligned properly.
+2. **Multiple Choice and Structured Questions**
+   - Preserve numbering and format.
+   - Write all options clearly in simple Markdown format.
+   - Add bilingual translations and audio placeholders as required by the rules.
 
 3. **Media Placeholders**
-   - If rules mention “add visuals” or “use images,” insert `[Insert Image: ...]`
-     after the relevant question or section to help comprehension.
-   - If rules mention “add audio,” insert `[Insert Audio: ...]`
-     where reading or listening support would help the student understand better.
-   - Keep placeholders minimal and relevant.
+   - If visuals are required, include `[Insert Image: ...]` after the related question.
+   - If audio is required, use `[Insert Audio: ...]` after questions or options.
 
-4. **Do NOT:**
-   - Summarize or remove any exercise.
-   - Add Engager/I Do/We Do/You Do structure.
-   - Introduce new unrelated questions.
+4. **Tone**
+   - Use a warm, teacher-like tone.
+   - Encourage and guide the student gently through the worksheet.
 
-5. **Tone**
-   - Use a friendly, teacher-like tone that guides the student through the worksheet.
-   - Use plain, encouraging English with occasional bilingual scaffolding if required.
+5. **Do NOT:**
+   - Summarize or remove exercises.
+   - Add new content or alter question meanings.
+   - Use any Engager/I Do/We Do/You Do structure — this is a worksheet, not a lesson.
 
 == WORKSHEET INPUT ==
 \"\"\"{text}\"\"\"
 
-Now produce the adapted worksheet following all the student profile rules.
-Ensure that placeholders and formatting enhancements are included **only if demanded by the rules**.
+== OUTPUT REQUIREMENTS ==
+- The output must be valid **Markdown**.
+- Section titles as `##`, questions as `###`, options and text as normal paragraphs.
+- Include translated versions and `[Insert Audio: ...]` placeholders if the rules demand them.
+- Do not include the rules or system instructions in the output.
+
+Now produce the fully adapted worksheet in Markdown format following these guidelines.
 """
 
     try:
