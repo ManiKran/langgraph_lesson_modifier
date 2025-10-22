@@ -43,7 +43,7 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
        - Retell the events in simple teacher-style English.  
        - Add reactions (“How might Icarus feel here?”).  
        - Translate full sentences if the English is complex.  
-       - Embed Hindi translations (in parentheses) next to hard words.  
+       - Embed Dominant Language translations (in parentheses) next to hard words.  
        - Only insert images if it helps explain that specific part.
 
 3. **We Do**  
@@ -61,7 +61,7 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
    🔸 Each question should check the student’s understanding of the key ideas or themes.  
    🔸 Provide 3–4 answer options in a vertical list, with clear line breaks between them and use alphabetical notation for each option.  
    🔸 Do **not** include the correct answer — the student must choose.  
-   🔸 include translated versions of each question and option IN THE Dominant Language(e.g., Hindi, Spanish) below the English.  
+   🔸 include translated versions of each question and option in the Dominant Language below the English.  
    🔸 If audio is required, add `[Insert Audio: Question X]` after each question.  
    🔸 Use student-friendly language and keep vocabulary consistent with the rest of the modified lesson.
 
