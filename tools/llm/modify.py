@@ -59,7 +59,7 @@ Apply *all relevant rules*, including any language‑ or accessibility‑specifi
 5. **Assessment**  
    Create 3 multiple-choice questions that assess the **main concept** or learning goal of the lesson — not just the retelling in “I Do”.  
    🔸 Each question should check the student’s understanding of the key ideas or themes.  
-   🔸 Provide 3–4 answer options in a vertical list, with clear line breaks between them.  
+   🔸 Provide 3–4 answer options in a vertical list, with clear line breaks between them and use alphabetical notation for each option.  
    🔸 Do **not** include the correct answer — the student must choose.  
    🔸 include translated versions of each question and option IN THE Dominant Language(e.g., Hindi, Spanish) below the English.  
    🔸 If audio is required, add `[Insert Audio: Question X]` after each question.  
