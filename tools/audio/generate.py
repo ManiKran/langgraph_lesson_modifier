@@ -35,7 +35,7 @@ def generate_audio_for_text_chunks(chunks: List[str]) -> List[Tuple[str, str]]:
 
             response = client.audio.speech.create(
                 model="gpt-4o-mini-tts",
-                voice="coral",  # or "shimmer", "onyx", etc.
+                voice="sage",  # or "shimmer", "onyx", etc.
                 input=chunk
             )
             response.stream_to_file(audio_path)
@@ -62,7 +62,7 @@ def generate_audio_file(text: str) -> str:
 
     response = client.audio.speech.create(
         model="gpt-4o-mini-tts",  # or "tts-1-hd" for better quality
-        voice="nova",  # Or coral, shimmer, onyx, etc.
+        voice="sage",  # Or coral, shimmer, onyx, etc.
         input=text
     )
     response.stream_to_file(audio_path)
