@@ -115,76 +115,65 @@ def modify_lesson_content_worksheet(text: str, rules: List[str]) -> str:
     """
 
     prompt = f"""
-You are an expert inclusive education designer adapting **worksheet content** for multilingual
-and special‑needs students.
+You are an expert inclusive education designer adapting **worksheet content** for multilingual and special-needs students.
 
 == Student Profile Rules ==
 {chr(10).join(f"- {rule}" for rule in rules)}
 
 == TASK ==
-Rewrite the following worksheet strictly in **Markdown format** according to the rules below.
-Your goal is to make the worksheet **accessible, bilingual if required, and easy to follow**, while keeping
-its original structure and question flow.
+Adapt the following worksheet into valid, clean **Markdown format** with clear headings, questions, and options. Make the content **accessible, bilingual (if required), and structured for readability**, without changing its original intent.
 
-== OUTPUT FORMAT (Markdown Rules) ==
-- Use Markdown headings and text consistently:
-  - `##` → for main worksheet sections (e.g., Reading Comprehension, Vocabulary Practice)
-  - `###` → for each question number or instruction
-  - Regular text → for question content and answer options
+== OUTPUT FORMAT ==
+- Use proper Markdown formatting:
+  - `##` for main worksheet sections (e.g., "Reading Comprehension", "Vocabulary Practice")
+  - `###` for each numbered question or instruction
+  - Plain paragraphs for question body and answer options
+
 - For multiple-choice questions:
-  - Do **not** use boxes or ASCII drawings.
-  - Use standard **alphabetical notation** for options, formatted as:
-    ```
+  - Use **alphabetical format**, one line per option:
     A) Option one  
     B) Option two  
     C) Option three  
     D) Option four
-    ```
-- After each **question** and **each option**, if rules mention bilingual or audio support:
-  - Include the **translated version** of that question or option in the student's dominant language in parentheses.
-  - Then, add an **audio placeholder** below it like:
-    ```
-    [Insert Audio: Question 1]
-    ```
-  or
-    ```
-    [Insert Audio: Option A]
-    ```
+
+- For each **question and option**, if bilingual or audio support is required:
+  - Add **translated version** in parentheses directly below
+  - Then add audio placeholder like:
+    [Insert Audio: Question 1] or [Insert Audio: Option A]
 
 == CONTENT ADAPTATION RULES ==
-1. **Simplify and Support**
-   - Simplify complex words and grammar.
-   - When applicable, add translations (in parentheses) beside challenging vocabulary or full sentences.
-   - Maintain numbering, blanks, and structure.
+1. **Simplify & Translate**
+   - Use plain, age-appropriate English
+   - Add translations (in parentheses) for complex vocabulary or full sentences, only if rules demand
 
-2. **Multiple Choice and Structured Questions**
-   - Preserve numbering and format.
-   - Write all options clearly in simple Markdown format.
-   - Add bilingual translations and audio placeholders as required by the rules.
+2. **Preserve Structure**
+   - Keep original order and numbering
+   - Preserve blanks, underlines, and response spaces where present
 
-3. **Media Placeholders**
-   - If visuals are required, include `[Insert Image: ...]` after the related question.
-   - If audio is required, use `[Insert Audio: ...]` after questions or options.
+3. **Media Support**
+   - If image support is required, add `[Insert Image: Description]` below relevant question
+   - If audio support is required, use `[Insert Audio: ...]` after question or option
 
 4. **Tone**
-   - Use a warm, teacher-like tone.
-   - Encourage and guide the student gently through the worksheet.
+   - Friendly, instructional tone that guides the student
+   - Avoid overly formal or academic wording
 
-5. **Do NOT:**
-   - Summarize or remove exercises.
-   - Add new content or alter question meanings.
-   - Use any Engager/I Do/We Do/You Do structure — this is a worksheet, not a lesson.
+5. **DO NOT**
+   - Use backticks (```)
+   - Wrap output in code blocks
+   - Add unrelated content or remove exercises
+   - Use Engager/I Do/We Do structure (this is a worksheet)
 
 == WORKSHEET INPUT ==
 \"\"\"{text}\"\"\"
 
 == OUTPUT REQUIREMENTS ==
-- The output must be valid **Markdown**.
-- Section titles as `##`, questions as `###`, options and text as normal paragraphs.
-- Include translated versions and `[Insert Audio: ...]` placeholders if the rules demand them.
-- Do not include the rules or system instructions in the output.
+- Output must be clean, valid Markdown.
+- Use `##` for section headings, `###` for questions, plain text for options.
+- Insert translated versions and `[Insert Audio: ...]` only if required by student profile rules.
+- Do NOT use any Markdown code fences or triple backticks in the output.
 
-Now produce the fully adapted worksheet in Markdown format following these guidelines.
+Now output the fully adapted worksheet in Markdown format only.
 """
 
     try:
